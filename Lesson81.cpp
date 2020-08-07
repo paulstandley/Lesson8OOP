@@ -1,6 +1,9 @@
 // 1
 #include "pch.h"
 #include "Header.h"
-#include <iostream>
+#include <string>
+#include <array>
 #include <vector>
+#include <iostream>
+
 

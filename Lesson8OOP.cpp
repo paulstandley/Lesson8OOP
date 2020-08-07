@@ -3,8 +3,10 @@
 
 #include "pch.h"
 #include "Header.h"
-#include <iostream>
+#include <string>
+#include <array>
 #include <vector>
+#include <iostream>
 
 
 class DateClass
@@ -16,7 +18,7 @@ public:
 
     void print() // defines a member function named print()
     {
-        std::cout << m_year << '/' << m_month << '/' << m_day;
+        std::cout << m_year << '/' << m_month << '/' << m_day << '\n';
     }
 };
 
@@ -53,7 +55,24 @@ public:
     }
 };
 
-void class_cpp_oop()
+class IntPair
+{//(h/t to reader Pashka2107 for this quiz idea)
+public:
+    int m_first{};
+    int m_second{};
+
+    void set(int first, int second)
+    {
+        m_first = first;
+        m_second = second;
+    }
+    void print()
+    {
+        std::cout << "Pair(" << m_first << ", " << m_second << ")\n";
+    }
+};
+
+void class_cpp_oop_82()
 {
     /*Classes
 
@@ -134,6 +153,10 @@ void class_cpp_oop()
     Otherwise, print() wouldn’t know what DateStruct we wanted to use.
     We then had to reference this parameter inside the function explicitly.
     
+    Rule
+
+    Name your classes starting with a capital letter.
+
     */
 
     // Declare two employees
@@ -206,13 +229,76 @@ void class_cpp_oop()
     it’s possible to nest classes inside other classes -- 
     this is uncommon and is typically only done by advanced programmers.
     
+    A note about structs in C++
+
+    In C, structs can only hold data, and do not have associated member functions.
+    In C++, after designing classes (using the class keyword), 
+    Bjarne Stroustrup spent some amount of time considering whether structs
+    (which were inherited from C) should be granted the ability to have member functions.
+    Upon consideration, he determined that they should,
+    in part to have a unified ruleset for both. 
+    So although we wrote the above programs using the class keyword, 
+    we could have used the struct keyword instead.
+
+    Many developers (including myself) feel this was the incorrect decision to be made,
+    as it can lead to dangerous assumptions.
+    For example, it’s fair to assume a class will clean up after itself 
+    (e.g. a class that allocates memory will deallocate it before being destroyed),
+    but it’s not safe to assume a struct will.
+    Consequently, we recommend using the struct keyword for data-only structures, 
+    and the class keyword for defining objects that require both data and functions
+    to be bundled together.
+
+    Rule: Use the struct keyword for data-only structures.
+    Use the class keyword for objects that have both data and functions.
+
+    You have already been using classes without knowing it
+
+    It turns out that the C++ standard library is full of classes 
+    that have been created for your benefit.
+    std::string, std::vector, and std::array are all class types!
+    So when you create an object of any of these types,
+    you’re instantiating a class object.
+    And when you call invoke a function using these objects,
+    you’re calling a member function.
+
     */
 
+    std::string s{ "Hello, world!" }; // instantiate a string class object
+    std::array<int, 3> a{ 1, 2, 3 }; // instantiate an array class object
+    std::vector<double> v{ 1.1, 2.2, 3.3 }; // instantiate a vector class object
+    std::cout << "length: " << s.length() << ' ' << a[1] << ' ' << v[1] << '\n'; // call a member function
+
+    /*Conclusion
+
+    The class keyword lets us create a custom type in C++ 
+    that can contain both member variables and member functions. 
+    Classes form the basis for Object-oriented programming, 
+    and we’ll spend the rest of this chapter and many of the future chapters
+    exploring all they have to offer!
+    
+    Question #1
+
+    a) Create a class called IntPair that holds two integers. 
+    This class should have two member variables to hold the integers. 
+    You should also create two member functions: one named “set” that will let
+    you assign values to the integers, 
+    and one named “print” that will print the values of the variables.
+
+    */
+
+    IntPair p1;
+    p1.set(1, 1);
+
+    IntPair p2{ 2, 2 };
+
+    p1.print();
+    p2.print();
 }
 
 int main()
 {
-    class_cpp_oop();
+    class_cpp_oop_82();
 
     return 0;
 }
