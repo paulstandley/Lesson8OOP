@@ -1,4 +1,4 @@
-#ifdef LESSON_8_OOP
+#ifndef LESSON_8_OOP
 
 
 
