@@ -11,180 +11,198 @@
 #include <iostream>
 
 
-
-class DateGetSet
+class Fractionoop
 {
 private:
-    int m_month;
-    int m_day;
-    int m_year;
+    int m_numerator;
+    int m_denominator;
 
 public:
-    int getMonth() { return m_month; } // getter for month
-    void setMonth(int month) { m_month = month; } // setter for month
+    Fractionoop() // default constructor
+    {
+        m_numerator = 0;
+        m_denominator = 1;
+    }
 
-    int getDay() { return m_day; } // getter for day
-    void setDay(int day) { m_day = day; } // setter for day
-
-    int getYear() { return m_year; } // getter for year
-    void setYear(int year) { m_year = year; } // setter for year
-    /*
-    The Date class above is essentially an encapsulated data struct
-    with a trivial implementation, 
-    and a user of the class might reasonably expect to be able to get or set the day,
-    month, or year.
-
-    The MyString class above isn’t used just to transport data --
-    it has more complex functionality and has an invariant that needs to be maintained.
-    No setter was provided for variable m_length because we don’t want the user
-    to be able to set the length directly 
-    (length should only be set whenever the string is changed). 
-    In this class, it does make sense to allow the user to get the
-    string length directly, so a getter for the length was provided.
-
-    Getters should provide “read-only” access to data. 
-    Therefore, the best practice is that they should 
-    return by value or const reference (not by non-const reference).
-    A getter that returns a non-const reference would 
-    allow the caller to modify the actual object being referenced,
-    which violates the read-only nature of the getter (and violates encapsulation).
-
-    Best practice: Getters should return by value or const reference
-
-    Access functions concerns
-
-    There is a fair bit of discussion around in which cases access functions
-    should be used or avoided. 
-    Although they don’t violate encapsulation, 
-    some developers would argue that use of access functions violates
-    good OOP class design (a topic that could easily fill an entire book).
-
-    For now, we’ll recommend a pragmatic approach. 
-    As you create your classes, consider the following:
-
-    If nobody outside your class needs to access a member,
-    don’t provide access functions for that member.
-
-    If someone outside your class needs to access a member, 
-    think about whether you can expose a behavior or action instead
-    (e.g. rather than a setAlive(bool) setter, implement a kill() function instead).
-
-    If you can’t, consider whether you can provide only a getter.
-
-    Summary
-
-    As you can see, encapsulation provides a lot of benefits
-    for just a little bit of extra effort.
-    The primary benefit is that encapsulation allows us to use a
-    class without having to know how it was implemented.
-    This makes it a lot easier to use classes we’re not familiar with.
-
-    */
+    int getNumerator() { return m_numerator; }
+    int getDenominator() { return m_denominator; }
+    double getValue() { return static_cast<double>(m_numerator) / m_denominator; }
 };
 
-void class_cpp_oop_84()
+class Fractionoop1
 {
-    /*Encapsulation
+private:
+    int m_numerator;
+    int m_denominator;
 
-    In object-oriented programming, Encapsulation (also called information hiding) 
-    is the process of keeping the details about how an object is implemented hidden
-    away from users of the object. 
-    Instead, users of the object access the object through a public interface. 
-    In this way, users are able to use the object without having to understand
-    how it is implemented.
-
-    Benefit: encapsulated classes are easier to use and reduce the complexity of your programs
-    
-    All of the classes in the C++ standard library are encapsulated. 
-    Imagine how much more complicated C++ would be if you had to understand 
-    how std::string, std::vector, or std::cout were implemented in order to use them!
-
-    Benefit: encapsulated classes help protect your data and prevent misuse
-
-    Global variables are dangerous because you don’t have strict control 
-    over who has access to the global variable, or how they use it. 
-    Classes with public members suffer from the same problem, just on a smaller scale.
-
-    class MyString
+public:
+    Fractionoop1() // default constructor
     {
-        char *m_string; // we'll dynamically allocate our string here
-        int m_length; // we need to keep track of the string length
-    };
+        m_numerator = 0;
+        m_denominator = 1;
+    }
 
-    These two variables have an intrinsic connection:
-    m_length should always equal the length of the string held by m_string 
-    (this connection is called an invariant).
-    If m_length were public, anybody could change the length of the string 
-    without changing m_string (or vice-versa). 
-    This would put the class into an inconsistent state,
-    which could cause all sorts of bizarre problems. 
-    By making both m_length and m_string private, 
-    users are forced to use whatever public member functions
-    are available to work with the class
-    (and those member functions can ensure that m_length and m_string are always
-    set appropriately).
-
-    We can also help protect the user from mistakes in using our class. 
-    Consider a class with a public array member variable:
-
-    If users can access the array directly, 
-    they could subscript the array with an invalid index,
-    producing unexpected results:
-
-    However, if we make the array private,
-    we can force the user to use a function that validates 
-    that the index is valid first:
-
-    In this way, we’ve protected the integrity of our program. As a side note, 
-    the at() functions of std::array and std::vector do something very similar!
-
-    Benefit: encapsulated classes are easier to change
-
-    Benefit: encapsulated classes are easier to debug
-
-    And finally, encapsulation helps you debug the program when something goes wrong. 
-    Often when a program does not work correctly,
-    it is because one of our member variables has an incorrect value. 
-    If everyone is able to access the variable directly, 
-    tracking down which piece of code modified the variable can be difficult
-    (it could be any of them, and you’ll need to breakpoint them all to
-    figure out which). 
-    However, if everybody has to call the same public function to modify a value, 
-    then you can simply breakpoint that function and watch as each caller 
-    changes the value until you see where it goes wrong.
-
-    Access functions
-
-    Depending on the class, it can be appropriate 
-    (in the context of what the class does)
-    for us to be able to directly get or set the value of a private member variable.
-
-    An access function is a short public function whose job is to retrieve or
-    change the value of a private member variable.
-
-    class MyString
+    // Constructor with two parameters, one parameter having a default value
+    Fractionoop1(int numerator, int denominator = 1)
     {
-    private:
-        char *m_string; // we'll dynamically allocate our string here
-        int m_length; // we need to keep track of the string length
+        assert(denominator != 0);
+        m_numerator = numerator;
+        m_denominator = denominator;
+    }
 
+    int getNumerator() { return m_numerator; }
+    int getDenominator() { return m_denominator; }
+    double getValue() { return static_cast<double>(m_numerator) / m_denominator; }
+};
+
+void class_cpp_oop_85()
+{
+    /*
+    When all members of a class (or struct) are public,
+    we can use aggregate initialization to initialize the class (or struct)
+    directly using an initialization list or uniform initialization:
+
+    class Foo
+    {
     public:
-        int getLength() { return m_length; } // access function to get value of m_length
+        int m_x;
+        int m_y;
     };
 
-    Access functions typically come in two flavors: getters and setters. 
-    Getters (also sometimes called accessors) are functions that return
-    the value of a private member variable. 
-    Setters (also sometimes called mutators) 
-    are functions that set the value of a private member variable.
+    int main()
+    {
+        Foo foo1 = { 4, 5 }; // initialization list
+        Foo foo2 { 6, 7 }; // uniform initialization
 
+        return 0;
+    }
+    
+    However, as soon as we make any member variables private,
+    we’re no longer able to initialize classes in this way. 
+    It does make sense: if you can’t directly access a variable 
+    (because it’s private), you shouldn’t be able to directly initialize it.
+
+    So then how do we initialize a class with private member variables? 
+    The answer is through constructors.
+
+    ///////////////////////////////////////////////////////////////////////
+
+    Constructors
+
+    A constructor is a special kind of class member function that is automatically 
+    called when an object of that class is instantiated. 
+    Constructors are typically used to initialize member variables 
+    of the class to appropriate default or user-provided values, 
+    or to do any setup steps necessary for the class to be used
+    (e.g. open a file or database).
+
+    Unlike normal member functions, 
+    constructors have specific rules for how they must be named:
+
+    Constructors must have the same name as the class (with the same capitalization)
+
+    Constructors have no return type (not even void)
 
     */
+
+    Fractionoop fracoop; // Since no arguments, calls Fraction() default constructor
+    std::cout << fracoop.getNumerator() << "/" << fracoop.getDenominator() << '\n';
+
+    /*This class was designed to hold a fractional value as an integer numerator
+    and denominator. 
+    We have defined a default constructor named Fraction
+    (the same as the class).
+
+    Because we’re instantiating an object of type Fraction with no arguments,
+    the default constructor will be called immediately after memory
+    is allocated for the object, and our object will be initialized.
+    
+    Note that our numerator and denominator were initialized
+    with the values we set in our default constructor!
+    Without a default constructor,
+    the numerator and denominator would have garbage values until 
+    we explicitly assigned them reasonable values, 
+    or initialize them by other means 
+    (remember: fundamental variables aren’t initialized by default).
+
+    While the default constructor is great for ensuring our classes are initialized 
+    with reasonable default values,
+    often times we want instances of our class to have specific values that we provide.
+    Fortunately, constructors can also be declared with parameters.
+    Here is an example of a constructor that takes two integer parameters 
+    that are used to initialize the numerator and denominator:
+
+    Note that we now have two constructors: 
+    a default constructor that will be called in the default case, 
+    and a second constructor that takes two parameters.
+    These two constructors can coexist peacefully in the same class due to 
+    function overloading. 
+    In fact, you can define as many constructors as you want,
+    so long as each has a unique signature (number and type of parameters).
+
+    So how do we use this constructor with parameters?
+    It’s simple! We can use brace or direct initialization:
+
+    */
+
+    Fractionoop1 fiveThirds{ 5, 3 }; // Brace initialization, calls Fraction(int, int)
+    Fractionoop1 threeQuarters(3, 4); // Direct initialization, also calls Fraction(int, int)
+
+    /*Since C++11, we prefer brace initialization. 
+    There is another special constructor that might make brace initialization
+    do something different, 
+    in that case we have to use direct initialization.
+    We’ll talk about these constructors later.
+
+    Note that we have given the second parameter of the constructor with parameters
+    a default value, so the following is also legal:
+
+    Fraction six{ 6 }; // calls Fraction(int, int) constructor, 
+    second parameter uses default value
+
+    Default values for constructors work exactly the same way as with any other 
+    functions, so in the above case where we call six{ 6 }, 
+    the Fraction(int, int) function is called with the second parameter 
+    defaulted to value 1.
+
+    Rule
+
+    Favor brace initialization to initialize class objects.
+
+    Copy initialization using equals with classes
+
+    Optional reading
+
+    This section is only relevant if you’re using a standard older than C++11.
+
+    Much like with fundamental variables, 
+    it’s also possible to initialize classes using copy initialization:
+
+    Fraction six = Fraction{ 6 };
+    // Copy initialize a Fraction, will call Fraction(6, 1)
+
+    Fraction seven = 7;
+    // Copy initialize a Fraction.  
+    The compiler will try to find a way to convert 7 to a Fraction, 
+    which will invoke the Fraction(7, 1) constructor.
+
+    However, we recommend you avoid this form of initialization with classes,
+    as it may be less efficient. 
+    Although direct initialization, uniform initialization, 
+    and copy initialization all work identically with fundamental types, 
+    copy-initialization does not work the same with classes 
+    (though the end-result is often the same).
+    We’ll explore the differences in more detail in a future chapter.
+
+    Reducing your constructors
+    
+    */
+
 }
 
 int main()
 {
-    class_cpp_oop_84();
+    class_cpp_oop_85();
 
     return 0;
 }
