@@ -55,6 +55,27 @@ public:
     double getValue() { return static_cast<double>(m_numerator) / m_denominator; }
 };
 
+class Fraction2
+{
+private:
+    int m_numerator;
+    int m_denominator;
+
+public:
+    // Default constructor
+    Fraction2(int numerator = 0, int denominator = 1)
+    {
+        assert(denominator != 0);
+
+        m_numerator = numerator;
+        m_denominator = denominator;
+    }
+
+    int getNumerator() { return m_numerator; }
+    int getDenominator() { return m_denominator; }
+    double getValue() { return static_cast<double>(m_numerator) / m_denominator; }
+};
+
 void class_cpp_oop_85()
 {
     /*
@@ -196,6 +217,105 @@ void class_cpp_oop_85()
 
     Reducing your constructors
     
+class Fraction
+{
+private:
+    int m_numerator;
+    int m_denominator;
+
+public:
+    // Default constructor
+    Fraction(int numerator=0, int denominator=1)
+     {
+        assert(denominator != 0);
+        m_numerator = numerator;
+        m_denominator = denominator;
+    }
+
+    int getNumerator() { return m_numerator; }
+    int getDenominator() { return m_denominator; }
+    double getValue() { return static_cast<double>(m_numerator) / m_denominator; }
+};
+
+    */
+
+    Fraction2 zero22; // will call Fraction(0, 1)
+    Fraction2 zero2{}; // will call Fraction(0, 1)
+    Fraction2 six2{ 6 }; // will call Fraction(6, 1)
+    Fraction2 fiveThirds2{ 5, 3 }; // will call Fraction(5, 3)
+
+    /*When implementing your constructors, 
+    consider how you might keep the number of constructors
+    down through smart defaulting of values.
+    
+    When implementing your constructors, 
+    consider how you might keep the number of constructors down through smart defaulting of values.
+
+    A reminder about default parameters
+
+    The rules around defining and calling functions that have default parameters
+    apply to constructors too. 
+    To recap, when defining a function with default parameters, 
+    all default parameters must follow any non-default parameters, 
+    ie. there cannot be a non-defaulted parameters after a defaulted parameter.
+
+    This may produce unexpected results for classes that have multiple default 
+    parameters of different types
+
+class Something
+{
+public:
+    // Default constructor
+    Something(int n = 0, double d = 1.2) // allows us to construct a Something(int, double), Something(int), or Something()
+    {
+    }
+};
+
+int main()
+{
+    Something s1 { 1, 2.4 }; // calls Something(int, double)
+    Something s2 { 1 }; // calls Something(int, double)
+    Something s3 {}; // calls Something(int, double)
+
+    Something s4 { 2.4 }; // will not compile, as there's no constructor to handle Something(double)
+
+    return 0;
+}
+
+    With s4, we’ve attempted to construct a Something by providing only a double. 
+    This won’t compile, as the rules for how arguments match with default parameters
+    won’t allow us to skip a non-rightmost parameter 
+    (in this case, the leftmost int parameter).
+
+    If we want to be able to construct a Something with only a double,
+    we’ll need to add a second (non-default) constructor:
+
+class Something
+{
+public:
+    // Default constructor
+    Something(int n = 0, double d = 1.2) // allows us to construct a Something(int, double), Something(int), or Something()
+    {
+    }
+
+    Something(double d)
+    {
+    }
+};
+
+int main()
+{
+    Something s1 { 1, 2.4 }; // calls Something(int, double)
+    Something s2 { 1 }; // calls Something(int, double)
+    Something s3 {}; // calls Something(int, double)
+
+    Something s4 { 2.4 }; // calls Something(double)
+
+    return 0;
+}
+
+    
+
     */
 
 }
