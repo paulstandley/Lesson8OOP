@@ -76,6 +76,32 @@ public:
     double getValue() { return static_cast<double>(m_numerator) / m_denominator; }
 };
 
+class Date20
+{
+private:
+    // Note: No initializations at member declarations
+    int m_year;
+    int m_month;
+    int m_day;
+
+public:
+    // Explicitly defaulted constructor
+    Date20() = default;
+};
+
+class Date22
+{
+private:
+    // Note: No initializations at member declarations
+    int m_year;
+    int m_month;
+    int m_day;
+
+public:
+    // Empty user-provided constructor
+    Date22() {};
+};
+
 void class_cpp_oop_85()
 {
     /*
@@ -314,7 +340,264 @@ int main()
     return 0;
 }
 
+    An implicitly generated default constructor
+
+    If your class has no constructors, 
+    C++ will automatically generate a public default constructor for you.
+    This is sometimes called an implicit constructor 
+    (or implicitly generated constructor).
+
+class Date
+{
+private:
+    int m_year;
+    int m_month;
+    int m_day;
+
+    // No user-provided constructors, the compiler generates a default constructor.
+};
+
+    This class has no constructor. 
+    Therefore, the compiler will generate a constructor that allows us to create a 
+    Date object without arguments.
+
+    This particular implicit constructor allows us to create a Date object
+    with no arguments, 
+    but doesn’t initialize any of the members unless we create the Date object
+    with direct- or list-initialization 
+    (because all of the members are fundamental types, 
+    and those don’t get initialized upon creation). 
+    If Date had members that are class-types themselves, 
+    for example std::string,
+    the constructors of those members would be called automatically.
+
+    To make sure the member variables get initialized,
+    we can initialize them at their declaration
+
+class Date
+{
+private:
+    int m_year{ 1900 };
+    int m_month{ 1 };
+    int m_day{ 1 };
+};
+
+    Although you can’t see the implicitly generated constructor, you can prove it exists:
+
+class Date
+{
+private:
+    int m_year{ 1900 };
+    int m_month{ 1 };
+    int m_day{ 1 };
+
+    // No constructor provided, so C++ creates a public default constructor for us
+};
+
+int main()
+{
+    Date date{}; // calls implicit constructor
+
+    return 0;
+}
+
+    The above code compiles,
+    because the date object will use the implicit constructor 
+    (which is public).
+
+    If your class has any other constructors, 
+    the implicitly generated constructor will not be provided. 
+    For example:
     
+class Date
+{
+private:
+    int m_year{ 1900 };
+    int m_month{ 1 };
+    int m_day{ 1 };
+
+public:
+    Date(int year, int month, int day) // normal non-default constructor
+    {
+        m_year = year;
+        m_month = month;
+        m_day = day;
+    }
+
+    // No implicit constructor provided because we already defined our own constructor
+};
+
+int main()
+{
+    Date date{}; // error: Can't instantiate object because default constructor doesn't exist and the compiler won't generate one
+    Date today{ 2020, 1, 19 }; // today is initialized to Jan 19th, 2020
+
+    return 0;
+}
+
+    To allow construction of a Date without arguments, 
+    either add default arguments to the constructor,
+    add an empty default constructor,
+    or explicitly add a default constructor:
+    
+class Date
+{
+private:
+    int m_year{ 1900 };
+    int m_month{ 1 };
+    int m_day{ 1 };
+
+public:
+    // Tell the compiler to create a default constructor, even if
+    // there are other user-provided constructors.
+    Date() = default;
+
+    Date(int year, int month, int day) // normal non-default constructor
+    {
+        m_year = year;
+        m_month = month;
+        m_day = day;
+    }
+};
+
+int main()
+{
+    Date date{}; // date is initialized to Jan 1st, 1900
+    Date today{ 2020, 10, 14 }; // today is initialized to Oct 14th, 2020
+
+    return 0;
+}
+
+    Using = default is almost the same as adding a default constructor 
+    with an empty body. 
+    The only difference is that = default allows us to safely initialize
+    member variables even if they don’t have an initializer:
+
+class Date
+{
+private:
+    // Note: No initializations at member declarations
+    int m_year;
+    int m_month;
+    int m_day;
+
+public:
+    // Explicitly defaulted constructor
+    Date() = default;
+};
+
+class Date2
+{
+private:
+    // Note: No initializations at member declarations
+    int m_year;
+    int m_month;
+    int m_day;
+
+public:
+    // Empty user-provided constructor
+    Date2() {};
+};
+
+int main()
+{
+    Date today{}; // today is 0, 0, 0
+    Date2 tomorrow{}; // tomorrows's members are uninitialized
+
+    return 0;
+}
+
+    */
+
+    Date20 today{}; // today is 0, 0, 0
+    Date22 tomorrow{}; // tomorrows's members are uninitialized
+
+    /*Using = default is longer than writing a constructor with an empty body, 
+    but expresses better what your intentions are (To create a default constructor),
+    and it’s safer. = default also works for other special constructors,
+    which we’ll talk about in the future.
+
+    Rule
+
+    If you have constructors in your class and need a default constructor 
+    that does nothing, use = default.
+
+    Classes containing classes
+
+    A class may contain other classes as member variables. 
+    By default, when the outer class is constructed,
+    the member variables will have their default constructors called. 
+    This happens before the body of the constructor executes.
+    
+class A
+{
+public:
+    A() { std::cout << "A\n"; }
+};
+
+class B
+{
+private:
+    A m_a; // B contains A as a member variable
+
+public:
+    B() { std::cout << "B\n"; }
+};
+
+int main()
+{
+    B b;
+    return 0;
+}
+
+    When variable b is constructed, the B() constructor is called.
+    Before the body of the constructor executes, m_a is initialized, 
+    calling the class A default constructor. This prints “A”. 
+    Then control returns back to the B constructor,
+    and the body of the B constructor executes.
+
+    This makes sense when you think about it, as the B() 
+    constructor may want to use variable m_a -- 
+    so m_a had better be initialized first!
+
+    The difference to the last example in the previous section is that m_a is a
+    class-type.
+    class-type members get initialized even if we don’t explicitly initialize them.
+
+    In the next lesson, we’ll talk about how to initialize these class member variables.
+    
+    Constructor notes
+
+    Many new programmers are confused about whether constructors create the objects or not.
+    They do not -- the compiler sets up the memory allocation for the object prior 
+    to the constructor call.
+
+    Constructors actually serve two purposes. 
+    First, constructors determine who is allowed to create an object. 
+    That is, an object of a class can only be created if a matching constructor 
+    can be found.
+
+    Second, constructors can be used to initialize objects.
+    Whether the constructor actually does an initialization is up to the programmer.
+    It’s syntactically valid to have a constructor that does no initialization at all
+    (the constructor still serves the purpose of allowing the object to be created, 
+    as per the above).
+
+    However, much like it is a best practice to initialize all local variables, 
+    it’s also a best practice to initialize all member variables on creation
+    of the object. This can be done either via a constructor,
+    or via other means we’ll show in future lessons.
+
+    Best practice
+
+    Always initialize all member variables in your objects.
+
+    Finally, constructors are only intended to be used for initialization
+    when the object is created. 
+    You should not try to call a constructor to re-initialize an existing object.
+    While it may compile, the results will not be what you intended 
+    (instead, the compiler will create a temporary object and then discard it).
+
 
     */
 
