@@ -11,132 +11,152 @@
 #include <iostream>
 
 
-class Ball1
+class Something11
 {
 private:
-	std::string m_color{};
-	double m_radius{};
+    int m_value1;
+    double m_value2;
+    char m_value3;
 
 public:
-	// Default constructor with no parameters
-	Ball1()
-	{
-		m_color = "black";
-		m_radius = 10.0;
-	}
+    Something11(int value1, double value2, char value3 = 'c')
+        : m_value1{ value1 }, m_value2{ value2 }, m_value3{ value3 } // directly initialize our member variables
+    {
+        // No need for assignment here
+    }
 
-	// Constructor with only color parameter (radius will use default value)
-	Ball1(const std::string& color)
-	{
-		m_color = color;
-		m_radius = 10.0;
-	}
+    void print()
+    {
+        std::cout << "Something(" << m_value1 << ", " << m_value2 << ", " << m_value3 << ")\n";
+    }
 
-	// Constructor with only radius parameter (color will use default value)
-	Ball1(double radius)
-	{
-		m_color = "black";
-		m_radius = radius;
-	}
-
-	// Constructor with both color and radius parameters
-	Ball1(const std::string& color, double radius)
-	{
-		m_color = color;
-		m_radius = radius;
-	}
-
-	void print()
-	{
-		std::cout << "color: " << m_color << ", radius: " << m_radius << '\n';
-	}
 };
 
-class Ball2
+void class_cpp_oop_85a()
 {
-private:
-	std::string m_color{};
-	double m_radius{};
+    /*
+    In the previous lesson, for simplicity,
+    we initialized our class member data in the constructor 
+    using the assignment operator.
 
-public:
-	// Constructor with only radius parameter (color will use default value)
-	Ball2(double radius)
-	{
-		m_color = "black";
-		m_radius = radius;
-	}
+    When the class’s constructor is executed, m_value1, m_value2,
+    and m_value3 are created.
+    Then the body of the constructor is run,
+    where the member data variables are assigned values. 
+    This is similar to the flow of the following code in non-object-oriented C++
 
-	// Constructor with both color and radius parameters
-	// handles no parameter, color only, and color + radius cases.
-	Ball2(const std::string& color = "black", double radius = 10.0)
-	{
-		m_color = color;
-		m_radius = radius;
-	}
+     as you have learned in previous lessons, some types of data 
+     (e.g. const and reference variables)
+     must be initialized on the line they are declared
 
-	void print()
-	{
-		std::cout << "color: " << m_color << ", radius: " << m_radius << '\n';
-	}
-};
+     Assigning values to const or reference member variables 
+     in the body of the constructor is clearly not possible in some cases.
 
-void lesson85quiz()
-{
-    /*Write a class named Ball. 
-    Ball should have two private member variables with default values: m_color 
-    (“black”) and m_radius (10.0). Ball should provide constructors to set 
-    only m_color, set only m_radius, set both, or set neither value. 
-    For this quiz question, do not use default parameters for your constructors.
-    Also write a function to print out the color and radius of the ball.
-    
+     Member initializer lists
+
+    To solve this problem, C++ provides a method for initializing class 
+    member variables (rather than assigning values to them after they are created)
+    via a member initializer list (often called a “member initialization list”). 
+    Do not confuse these with the similarly named initializer list
+    that we can use to assign values to arrays.
+
+    int value1 = 1; // copy initialization
+    double value2(2.2); // direct initialization
+    char value3 {'c'}; // uniform initialization
+
+    Using an initialization list is almost identical to doing direct initialization 
+    or uniform initialization.
+
+    This is something that is best learned by example.
+    Revisiting our code that does assignments in the constructor body:
+
+    class Something
+    {
+    private:
+        int m_value1;
+        double m_value2;
+        char m_value3;
+
+    public:
+        Something()
+        {
+            // These are all assignments, not initializations
+            m_value1 = 1;
+            m_value2 = 2.2;
+            m_value3 = 'c';
+        }
+    };
+
+    class Something
+    {
+    private:
+        int m_value1;
+        double m_value2;
+        char m_value3;
+
+    public:
+        Something() : m_value1{ 1 }, m_value2{ 2.2 }, m_value3{ 'c' } // Initialize our member variables
+        {
+        // No need for assignment here
+        }
+
+        void print()
+        {
+            std::cout << "Something(" << m_value1 << ", " << m_value2 << ", " << m_value3 << ")\n";
+        }
+    };
+
+    int main()
+    {
+        Something something{};
+        something.print();
+        return 0;
+    }
+
+    The member initializer list is inserted after the constructor parameters.
+    It begins with a colon (:), and then lists each variable to initialize 
+    along with the value for that variable separated by a comma.
+
+    Note that we no longer need to do the assignments in the constructor body,
+    since the initializer list replaces that functionality. 
+    Also note that the initializer list does not end in a semicolon.
+
     */
 
-	Ball1 def1{};
-	def1.print();
+    Something11 something11{ 1, 2.2 };
+    // value1 = 1, value2=2.2, value3 gets default value 'c'
+    something11.print();
 
-	Ball1 blue1{ "blue" };
-	blue1.print();
+    /*
+    class Something
+    {
+    private:
+        const int m_value;
+ 
+    public:
+        Something(): m_value{ 5 } // directly initialize our const member variable
+        {
+        } 
+    };
 
-	Ball1 twenty1{ 20.0 };
-	twenty1.print();
+    This works because 
+    we’re allowed to initialize const variables
+    (but not assign to them!).
 
-	Ball1 blueTwenty1{ "blue", 20.0 };
-	blueTwenty1.print();
+    Rule
 
-	//b) Update your answer to the previous 
-	//question to use constructors with default parameters. 
-	//Use as few constructors as possible.
-	std::cout << std::endl;
+    Use member initializer lists to initialize your class member variables 
+    instead of assignment.
 
-	Ball2 def2{};
-	def2.print();
-
-	Ball2 blue2{ "blue" };
-	blue2.print();
-
-	Ball2 twenty2{ 20.0 };
-	twenty2.print();
-
-	Ball2 blueTwenty2{ "blue", 20.0 };
-	blueTwenty2.print();
-
-	//Question #2 What happens if you don’t declare a default constructor ?
-
-	/*
-	If you haven’t defined any other constructors, 
-	the compiler will create an empty public default constructor for you. 
-	This means your objects will be instantiable with no parameters.
-	If you have defined other constructors (default or otherwise),
-	the compiler will not create a default constructor for you.
-	Assuming you haven’t provided a default constructor yourself,
-	your objects will not be instantiable without arguments.
-	*/
+    */
 
 }
 
+
 int main()
 {
-    lesson85quiz();
+    class_cpp_oop_85a();
+
 
     return 0;
 }

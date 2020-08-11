@@ -10,6 +10,8 @@ void lesson83quiz();
 void class_cpp_oop_84();
 void class_cpp_oop_85();
 
+void lesson85quiz();
+
 
 #endif // LESSON_8_OOP
 
