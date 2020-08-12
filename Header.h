@@ -12,6 +12,10 @@ void class_cpp_oop_85();
 
 void lesson85quiz();
 
+void class_cpp_oop_85a();
+
+void lesson85aquiz();
+
 
 #endif // LESSON_8_OOP
 

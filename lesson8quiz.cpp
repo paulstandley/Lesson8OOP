@@ -5,6 +5,7 @@
 #include <vector>
 #include <cassert>
 #include <stack>
+#include <cstdint>
 #include <iostream>
 
 
@@ -311,4 +312,7 @@ void lesson85quiz()
 
 	*/
 }
+
+
+
 
