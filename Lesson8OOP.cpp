@@ -148,8 +148,33 @@ void class_cpp_oop_85a()
     Use member initializer lists to initialize your class member variables 
     instead of assignment.
 
-    */
+    Initializing array members with member initializer lists
 
+    class Something
+    {
+    private:
+        const int m_array[5];
+
+    public:
+        Something(): m_array {} // zero the member array
+        {
+        }
+    };
+
+    However, since C++11, 
+    you can fully initialize a member array using uniform initialization:
+
+    class Something
+    {
+    private:
+        const int m_array[5];
+    public:
+        Something(): m_array { 1, 2, 3, 4, 5 } // use uniform initialization to initialize our member array
+        {
+        }
+    };
+
+    */
 }
 
 
