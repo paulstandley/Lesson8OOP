@@ -12,48 +12,89 @@
 #include <iostream>
 
 
-class RGBA
+class Rectanglensmi
 {
-public:
-    // A type alias saves us some typing and makes the class easier to maintain
-    using uif8 = std::uint8_t;
 private:
-    uif8 m_red;
-    uif8 m_green;
-    uif8 m_blue;
-    uif8 m_alpha;
+    double m_length{ 1.0 };
+    double m_width{ 1.0 };
+
 public:
-    RGBA(uif8 red = 1, uif8 green = 1, uif8 blue = 1, uif8 alpha = 255)
-        : m_red{ red }, m_green{ green }, m_blue{ blue }, m_alpha{ alpha }
-    {}
+
+    Rectanglensmi(double length, double width)
+        : m_length{ length },
+        m_width{ width }
+    {
+        // m_length and m_width are initialized by the constructor (the default values aren't used)
+    }
+
+    Rectanglensmi(double length)
+        : m_length{ length }
+    {
+        // m_length is initialized by the constructor.
+        // m_width's default value (1.0) is used.
+    }
+
     void print()
     {
-        std::cout << "Red = " << static_cast<int>(m_red) << " Green = " << static_cast<int>(m_green)
-            << " Blue = " << static_cast<int>(m_blue) << " Alpha = " << static_cast<int>(m_alpha) << ".\n";
-    };
+        std::cout << "length: " << m_length << ", width: " << m_width << '\n';
+    }
+
 };
 
-void lesson85aquiz()//std::uint8_t 
+
+void class_cpp_oop_85a()
 {
-    /*Write a class named RGBA that contains 4 member variables of type 
-    std::uint_fast8_t named m_red, m_green, m_blue, and m_alpha 
-    (#include cstdint to access type std::uint_fast8_t). 
-    Assign default values of 0 to m_red, m_green, and m_blue, and 255 to m_alpha. 
-    Create a constructor that uses a member initializer list that allows the user
-    to initialize values for m_red, m_blue, m_green, and m_alpha. 
-    Include a print() function that outputs the value of the member variables.
+    /*Non-static member initialization
+
+    When writing a class that has multiple constructors (which is most of them), 
+    having to specify default values for all members in each constructor 
+    results in redundant code.
+    If you update the default value for a member, 
+    you need to touch each constructor.
+
+    Starting with C++11,
+    it’s possible to give normal class member variables 
+    (those that don’t use the static keyword)
+    a default initialization value directly
+
+    Non-static member initialization 
+    (also called in-class member initializers)
+    provides default values for your member variables that your
+    constructors will use if the constructors do not provide initialization
+    values for the members themselves (via the member initialization list).
+
+    However, note that constructors still determine what 
+    kind of objects may be created. 
+
+    If a default initialization value is provided and the constructor initializes
+    the member via the member initializer list, 
+    the member initializer list will take precedence.
     
     */
 
-    RGBA teal{ 0, 127, 127 };
-    teal.print();
+    Rectanglensmi xxxxx{ 2.0, 3.0 };
+    xxxxx.print();
 
+    Rectanglensmi yyyyy{ 4.0 };
+    yyyyy.print();
+    
+    /*Note that initializing members 
+    using non-static member initialization requires using either an equals sign, 
+    or a brace (uniform) initializer -- the direct initialization
+    form doesn’t work here.
+
+    Rule
+
+    Favor use of non-static member initialization to give default values 
+    for your member variables.
+    
+    */
 }
 
 
 int main()
 {
-    lesson85aquiz();
+    
 
 
     return 0;
