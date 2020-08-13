@@ -9,84 +9,50 @@
 #include <cassert>
 #include <stack>
 #include <cstdint>//for std::uint_fast8
+#include <string>
 #include <iostream>
 
 
-class Rectanglensmi
+class Ball85aquiz
 {
 private:
-    double m_length{ 1.0 };
-    double m_width{ 1.0 };
-
+    std::string m_color{ "black" };
+    // The radius always gets initialized by the constructors.
+    double m_radius;
 public:
-
-    Rectanglensmi(double length, double width)
-        : m_length{ length },
-        m_width{ width }
-    {
-        // m_length and m_width are initialized by the constructor (the default values aren't used)
-    }
-
-    Rectanglensmi(double length)
-        : m_length{ length }
-    {
-        // m_length is initialized by the constructor.
-        // m_width's default value (1.0) is used.
-    }
+    // Constructor with only radius parameter (color will use default value)
+    Ball85aquiz(double radius) : m_radius{ radius }
+    {}
+    // Constructor with both color and radius parameters
+    Ball85aquiz(const std::string &color = "black", double radius = 1): m_color{ color }, m_radius{ radius }
+    {}
 
     void print()
     {
-        std::cout << "length: " << m_length << ", width: " << m_width << '\n';
+        std::cout << "color: " << m_color << ", radius: " << m_radius << '\n';
     }
-
 };
 
-
-void class_cpp_oop_85a()
+void lesson85aquiz()
 {
-    /*Non-static member initialization
+    Ball85aquiz defdd{};
+    defdd.print();
 
-    When writing a class that has multiple constructors (which is most of them), 
-    having to specify default values for all members in each constructor 
-    results in redundant code.
-    If you update the default value for a member, 
-    you need to touch each constructor.
+    Ball85aquiz blueaaa{ "blue" };
+    blueaaa.print();
 
-    Starting with C++11,
-    it’s possible to give normal class member variables 
-    (those that don’t use the static keyword)
-    a default initialization value directly
+    Ball85aquiz twentyaaa{ 20.0 };
+    twentyaaa.print();
 
-    Non-static member initialization 
-    (also called in-class member initializers)
-    provides default values for your member variables that your
-    constructors will use if the constructors do not provide initialization
-    values for the members themselves (via the member initialization list).
+    Ball85aquiz blueTwentyaaa{ "blue", 20.0 };
+    blueTwentyaaa.print();
 
-    However, note that constructors still determine what 
-    kind of objects may be created. 
+    /*
+    Why do we not need to declare a default constructor in the program above,
+    even though we’re constructing def without arguments?
 
-    If a default initialization value is provided and the constructor initializes
-    the member via the member initializer list, 
-    the member initializer list will take precedence.
-    
-    */
-
-    Rectanglensmi xxxxx{ 2.0, 3.0 };
-    xxxxx.print();
-
-    Rectanglensmi yyyyy{ 4.0 };
-    yyyyy.print();
-    
-    /*Note that initializing members 
-    using non-static member initialization requires using either an equals sign, 
-    or a brace (uniform) initializer -- the direct initialization
-    form doesn’t work here.
-
-    Rule
-
-    Favor use of non-static member initialization to give default values 
-    for your member variables.
+    “Ball def{};” uses the second Ball constructor which has a default argument 
+    for every parameter.
     
     */
 }
@@ -94,7 +60,7 @@ void class_cpp_oop_85a()
 
 int main()
 {
-    
+    lesson85aquiz();
 
 
     return 0;

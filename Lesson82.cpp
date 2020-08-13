@@ -309,22 +309,57 @@ public:
     };
 };
 
-void lesson85aquiz()//std::uint8_t 
-{
-    /*Write a class named RGBA that contains 4 member variables of type
-    std::uint_fast8_t named m_red, m_green, m_blue, and m_alpha
-    (#include cstdint to access type std::uint_fast8_t).
-    Assign default values of 0 to m_red, m_green, and m_blue, and 255 to m_alpha.
-    Create a constructor that uses a member initializer list that allows the user
-    to initialize values for m_red, m_blue, m_green, and m_alpha.
-    Include a print() function that outputs the value of the member variables.
+//void class_cpp_oop_85b()
+//{
+    /*Non-static member initialization
+
+    When writing a class that has multiple constructors (which is most of them),
+    having to specify default values for all members in each constructor
+    results in redundant code.
+    If you update the default value for a member,
+    you need to touch each constructor.
+
+    Starting with C++11,
+    it’s possible to give normal class member variables
+    (those that don’t use the static keyword)
+    a default initialization value directly
+
+    Non-static member initialization
+    (also called in-class member initializers)
+    provides default values for your member variables that your
+    constructors will use if the constructors do not provide initialization
+    values for the members themselves (via the member initialization list).
+
+    However, note that constructors still determine what
+    kind of objects may be created.
+
+    If a default initialization value is provided and the constructor initializes
+    the member via the member initializer list,
+    the member initializer list will take precedence.
 
     */
 
-    RGBA teal{ 0, 127, 127 };
-    teal.print();
+    /*
+    Rectanglensmi xxxxx{ 2.0, 3.0 };
+    xxxxx.print();
 
-}
+    Rectanglensmi yyyyy{ 4.0 };
+    yyyyy.print();
+
+    */
+
+    /*Note that initializing members
+    using non-static member initialization requires using either an equals sign,
+    or a brace (uniform) initializer -- the direct initialization
+    form doesn’t work here.
+
+    Rule
+
+    Favor use of non-static member initialization to give default values
+    for your member variables.
+
+    */
+//}
 
 
 
