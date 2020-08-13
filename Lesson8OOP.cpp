@@ -30,6 +30,11 @@ public:
     Employeeodc(const std::string& name) : Employeeodc{ 0, name }
     { }
 
+    void print()
+    {
+        std::cout << m_id << " is the id of " << m_name << '\n';
+    }
+
     /*
     This class has 2 constructors, one of which delegates to 
     Employee(int, const std::string &). 
@@ -116,13 +121,14 @@ void class_cpp_oop_86()
     use delegating constructors to avoid duplicate code.
 
     */
+    
 
 }
 
 
 int main()
 {
-    
+    void class_cpp_oop_86();
 
 
     return 0;
