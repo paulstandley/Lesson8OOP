@@ -314,6 +314,48 @@ void lesson85quiz()
 	*/
 }
 
+class Ball85aquiz
+{
+private:
+	std::string m_color{ "black" };
+	// The radius always gets initialized by the constructors.
+	double m_radius;
+public:
+	// Constructor with only radius parameter (color will use default value)
+	Ball85aquiz(double radius) : m_radius{ radius }
+	{}
+	// Constructor with both color and radius parameters
+	Ball85aquiz(const std::string& color = "black", double radius = 1) : m_color{ color }, m_radius{ radius }
+	{}
 
+	void print()
+	{
+		std::cout << "color: " << m_color << ", radius: " << m_radius << '\n';
+	}
+};
+
+void lesson85aquiz()
+{
+	Ball85aquiz defdd{};
+	defdd.print();
+
+	Ball85aquiz blueaaa{ "blue" };
+	blueaaa.print();
+
+	Ball85aquiz twentyaaa{ 20.0 };
+	twentyaaa.print();
+
+	Ball85aquiz blueTwentyaaa{ "blue", 20.0 };
+	blueTwentyaaa.print();
+
+	/*
+	Why do we not need to declare a default constructor in the program above,
+	even though we’re constructing def without arguments?
+
+	“Ball def{};” uses the second Ball constructor which has a default argument
+	for every parameter.
+
+	*/
+}
 
 

@@ -13,54 +13,116 @@
 #include <iostream>
 
 
-class Ball85aquiz
+class Employeeodc
 {
 private:
-    std::string m_color{ "black" };
-    // The radius always gets initialized by the constructors.
-    double m_radius;
+    int m_id{};
+    std::string m_name{};
+
 public:
-    // Constructor with only radius parameter (color will use default value)
-    Ball85aquiz(double radius) : m_radius{ radius }
-    {}
-    // Constructor with both color and radius parameters
-    Ball85aquiz(const std::string &color = "black", double radius = 1): m_color{ color }, m_radius{ radius }
-    {}
-
-    void print()
+    Employeeodc(int id = 0, const std::string& name = "") :
+        m_id{ id }, m_name{ name }
     {
-        std::cout << "color: " << m_color << ", radius: " << m_radius << '\n';
+        std::cout << "Employee " << m_name << " created.\n";
     }
-};
 
-void lesson85aquiz()
-{
-    Ball85aquiz defdd{};
-    defdd.print();
-
-    Ball85aquiz blueaaa{ "blue" };
-    blueaaa.print();
-
-    Ball85aquiz twentyaaa{ 20.0 };
-    twentyaaa.print();
-
-    Ball85aquiz blueTwentyaaa{ "blue", 20.0 };
-    blueTwentyaaa.print();
+    // Use a delegating constructor to minimize redundant code
+    Employeeodc(const std::string& name) : Employeeodc{ 0, name }
+    { }
 
     /*
-    Why do we not need to declare a default constructor in the program above,
-    even though we’re constructing def without arguments?
+    This class has 2 constructors, one of which delegates to 
+    Employee(int, const std::string &). 
+    In this way, the amount of redundant code is minimized 
+    (we only have to write one constructor body instead of two).
 
-    “Ball def{};” uses the second Ball constructor which has a default argument 
-    for every parameter.
-    
+    A few additional notes about delegating constructors. 
+    First, a constructor that delegates to another constructor 
+    is not allowed to do any member initialization itself.
+    So your constructors can delegate or initialize, but not both.
+
+    Second, it’s possible for one constructor to delegate to another constructor,
+    which delegates back to the first constructor. 
+    This forms an infinite loop, and will cause your program to run out of
+    stack space and crash. 
+    You can avoid this by ensuring all of your constructors resolve 
+    to a non-delegating constructor.
     */
+};
+
+void class_cpp_oop_86()
+{
+    /*
+    Overlapping and delegating constructors
+
+    Constructors with overlapping functionality
+
+    When you instantiate a new object,
+    the object’s constructor is called implicitly. 
+    It’s not uncommon to have a class with multiple constructors 
+    that have overlapping functionality.
+
+    This class has two constructors: a default constructor, 
+    and a constructor that takes an integer. 
+    Because the “code to do A” portion of the constructor is required
+    by both constructors, the code is duplicated in each constructor.
+
+    As you’ve (hopefully) learned by now, 
+    having duplicate code is something to be avoided as much as possible. 
+  
+    If you try to have one constructor call another constructor,
+    it will compile and maybe cause a warning, 
+    but it will not work as you expect, 
+    and you will likely spend a long time trying to figure out why,
+    even with a debugger. 
+    What’s happening is that Foo();
+    instantiates a new Foo object, 
+    which is immediately discarded, 
+    because it’s not stored in a variable.
+
+    Delegating constructors
+
+    Constructors are allowed to call other constructors.
+    This process is called delegating constructors (or constructor chaining).
+
+    To have one constructor call another,
+    simply call the constructor in the member initializer list. 
+    This is one case where calling another constructor directly is acceptable.
+
+    class Foo
+    {
+    private:
+
+    public:
+        Foo()
+        {
+            // code to do A
+        }
+
+        Foo(int value): Foo{} // use Foo() default constructor to do A
+        {
+            // code to do B
+        }
+
+    };
+
+    This works exactly as you’d expect. 
+    Make sure you’re calling the constructor from the member initializer list,
+    not in the body of the constructor.
+
+    Best practice
+
+    If you have multiple constructors that have the same functionality, 
+    use delegating constructors to avoid duplicate code.
+
+    */
+
 }
 
 
 int main()
 {
-    lesson85aquiz();
+    
 
 
     return 0;
