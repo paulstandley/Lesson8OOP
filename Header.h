@@ -18,6 +18,7 @@ void lesson85aquiz();
 void lesson85aquiz();
 
 void class_cpp_oop_86();
+void class_cpp_oop_87();
 
 
 #endif // LESSON_8_OOP

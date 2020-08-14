@@ -10,205 +10,201 @@
 #include <stack>
 #include <cstdint>//for std::uint_fast8
 #include <string>
+#include <cstddef>
 #include <iostream>
 
 
-class Employeeodc
+class IntArray
 {
 private:
-    int m_id{};
-    std::string m_name{};
+    int* m_array{};
+    int m_length{};
 
 public:
-    Employeeodc(int id = 0, const std::string& name = "") :
-        m_id{ id }, m_name{ name }
+    IntArray(int length) // constructor
     {
-        std::cout << "Employee " << m_name << " created.\n";
+        assert(length > 0);
+
+        m_array = new int[static_cast<std::size_t>(length)]{};
+        m_length = length;
     }
 
-    // Use a delegating constructor to minimize redundant code
-    Employeeodc(const std::string& name) : Employeeodc{ 0, name }
-    { }
-
-    void print()
+    ~IntArray() // destructor
     {
-        std::cout << m_id << " is the id of " << m_name << '\n';
+        // Dynamically delete the array we allocated earlier
+        delete[] m_array;
     }
 
-    /*
-    This class has 2 constructors, one of which delegates to 
-    Employee(int, const std::string &). 
-    In this way, the amount of redundant code is minimized 
-    (we only have to write one constructor body instead of two).
+    void setValue(int index, int value) { m_array[index] = value; }
+    int getValue(int index) { return m_array[index]; }
 
-    A few additional notes about delegating constructors. 
-    First, a constructor that delegates to another constructor 
-    is not allowed to do any member initialization itself.
-    So your constructors can delegate or initialize, but not both.
-
-    Second, it’s possible for one constructor to delegate to another constructor,
-    which delegates back to the first constructor. 
-    This forms an infinite loop, and will cause your program to run out of
-    stack space and crash. 
-    You can avoid this by ensuring all of your constructors resolve 
-    to a non-delegating constructor.
-    */
+    int getLength() { return m_length; }
 };
 
-void class_cpp_oop_86()
+class Simple
+{
+private:
+    int m_nID{};
+
+public:
+    Simple(int nID)
+        : m_nID{ nID }
+    {
+        std::cout << "Constructing Simple " << nID << '\n';
+    }
+
+    ~Simple()
+    {
+        std::cout << "Destructing Simple" << m_nID << '\n';
+    }
+
+    int getID() { return m_nID; }
+};
+
+void class_cpp_oop_87()
 {
     /*
-    Overlapping and delegating constructors
-
-    Constructors with overlapping functionality
-
-    When you instantiate a new object,
-    the object’s constructor is called implicitly. 
-    It’s not uncommon to have a class with multiple constructors 
-    that have overlapping functionality.
-
-    This class has two constructors: a default constructor, 
-    and a constructor that takes an integer. 
-    Because the “code to do A” portion of the constructor is required
-    by both constructors, the code is duplicated in each constructor.
-
-    As you’ve (hopefully) learned by now, 
-    having duplicate code is something to be avoided as much as possible. 
-  
-    If you try to have one constructor call another constructor,
-    it will compile and maybe cause a warning, 
-    but it will not work as you expect, 
-    and you will likely spend a long time trying to figure out why,
-    even with a debugger. 
-    What’s happening is that Foo();
-    instantiates a new Foo object, 
-    which is immediately discarded, 
-    because it’s not stored in a variable.
-
-    Delegating constructors
-
-    Constructors are allowed to call other constructors.
-    This process is called delegating constructors (or constructor chaining).
-
-    To have one constructor call another,
-    simply call the constructor in the member initializer list. 
-    This is one case where calling another constructor directly is acceptable.
-
-    class Foo
-    {
-    private:
-
-    public:
-        Foo()
-        {
-            // code to do A
-        }
-
-        Foo(int value): Foo{} // use Foo() default constructor to do A
-        {
-            // code to do B
-        }
-
-    };
-
-    This works exactly as you’d expect. 
-    Make sure you’re calling the constructor from the member initializer list,
-    not in the body of the constructor.
-
-    Best practice
-
-    If you have multiple constructors that have the same functionality, 
-    use delegating constructors to avoid duplicate code.
-
-    //////////////////////////////////////////////////////////////////////////////
-
-    Make sure you’re calling the constructor from the member initializer list,
-    not in the body of the constructor.
-
-    Relatedly, 
-    you may find yourself in the situation where you want to write
-    a member function to re-initialize a class back to default values. 
-    Because you probably already have a constructor that does this,
-    you may be tempted to try to call the constructor from your member function.
+    Destructors
     
-    However, 
-    trying to call a constructor directly will generally result
-    in unexpected behavior. 
-    Many developers simply copy the code from the constructor
-    into the initialization function, 
-    which would work, but lead to duplicate code. 
-    
-    The best solution in this case is to move the code
-    from the constructor to your new function,
-    and have the constructor call your function 
-    to do the work of “initializing” the data:
+    A destructor is another special kind of class member function 
+    that is executed when an object of that class is destroyed.
+    Whereas constructors are designed to initialize a class, 
+    destructors are designed to help clean up.
 
-    class Foo
-    {
-    public:
-        Foo()
-        {
-            init();
-        }
+    When an object goes out of scope normally, 
+    or a dynamically allocated object is explicitly deleted using the delete keyword,
+    the class destructor is automatically called (if it exists)
+    to do any necessary clean up before the object is removed from memory. 
+    For simple classes (those that just initialize the values of normal member 
+    variables), a destructor is not needed because C++ will automatically clean up 
+    the memory for you.
 
-        Foo(int value)
-        {
-            init();
-            // do something with value
-        }
+    However, if your class object is holding any resources 
+    (e.g. dynamic memory, or a file or database handle),
+    or if you need to do any kind of maintenance before the object is destroyed,
+    the destructor is the perfect place to do so,
+    as it is typically the last thing to happen before the object is destroyed.
 
-        void init()
-        {
-            // code to "initialize" Foo
-        }
-    };
+    ////////////////////////////////////////////////////////////////////////////////
 
-    Constructors are allowed to call non-constructor functions in the class. 
-    Just be careful that any members the non-constructor function
-    uses have already been initialized.
-    Although you may be tempted to copy code from the first constructor 
-    into the second constructor, 
-    having duplicate code makes your class harder to understand 
-    and more burdensome to maintain.
+    Destructor naming
 
-    We say “initialize”, but it’s not real initialization. 
-    By the time the constructor calls init(), 
-    the members already exist and have been default 
-    initialized or are uninitialized. 
-    The init function can only assign values to the members. 
-    
-    There are some types that cannot be instantiated without arguments,
-    because they don’t have a default constructor.
-    If any of the class members has such a type, 
-    the init function doesn’t work and the constructors
-    have to initialize those members themselves.
+    Like constructors, destructors have specific naming rules:
 
-    It is fairly common to include an init() function 
-    that initializes member variables to their default values, 
-    and then have each constructor call that init() function 
-    before doing its parameter-specific tasks.
-    This minimizes code duplication and allows you to explicitly call init()
-    from wherever you like.
+    1) The destructor must have the same name as the class, preceded by a tilde (~).
 
-    One small caveat: be careful when using init() functions 
-    and dynamically allocated memory. 
-    Because init() functions can be called by anyone at any time,
-    dynamically allocated memory may or may not have
-    already been allocated when init() is called.
-    Be careful to handle this situation appropriately --
-    it can be slightly confusing,
-    since a non-null pointer could be either dynamically allocated memory 
-    or an uninitialized pointer!
+    2) The destructor can not take arguments.
+
+    3) The destructor has no return type.
+
+    Note that rule 2 implies that only one destructor may exist per class, 
+    as there is no way to overload destructors since they can not be differentiated 
+    from each other based on arguments.
+
+    Generally you should not call a destructor explicitly 
+    (as it will be called automatically when the object is destroyed),
+    since there are rarely cases where you’d want to clean up an object more than once. 
+    However, destructors may safely call other member functions 
+    since the object isn’t destroyed until after the destructor executes.
 
     */
+
+    IntArray ar(10); // allocate 10 integers
+    for (int count{ 0 }; count < ar.getLength(); ++count)
+        ar.setValue(count, count + 1);
+
+    std::cout << "The value of element 5 is: " << ar.getValue(5) << '\n';
+
+    /*
+    IntArray(const IntArray&) = delete;
+	IntArray& operator=(const IntArray&) = delete;
+
+    On the first line, we instantiate a new IntArray class object called ar, 
+    and pass in a length of 10. 
+    This calls the constructor,
+    which dynamically allocates memory for the array member. 
+    We must use dynamic allocation here because we do not know at compile time 
+    what the length of the array is (the caller decides that).
+
+    At the end of main(), ar goes out of scope. 
+    This causes the ~IntArray() destructor to be called, 
+    which deletes the array that we allocated in the constructor!
+
+    Constructor and destructor timing
+
+    As mentioned previously, the constructor is called when an object is created, 
+    and the destructor is called when an object is destroyed. 
+    In the following example, 
+    we use cout statements inside the constructor and destructor.
+
+    */
+
+    // Allocate a Simple on the stack
+    Simple simple{ 1 };
+    std::cout << simple.getID() << '\n';
+
+    // Allocate a Simple dynamically
+    Simple* pSimple{ new Simple{ 2 } };
+
+    std::cout << pSimple->getID() << '\n';
+
+    // We allocated pSimple dynamically, so we have to delete it.
+    delete pSimple;
+
+    /*Note that “Simple 1” is destroyed after “Simple 2” 
+    because we deleted pSimple before the end of the function, 
+    whereas simple was not destroyed until the end of main().
+
+    Global variables are constructed before main() and destroyed after main().
     
+    ////////////////////////////////////////////////////////////////////////////
 
-}
+    RAII
 
+    RAII (Resource Acquisition Is Initialization)
+    is a programming technique whereby resource use is tied to the lifetime of objects
+    with automatic duration (e.g. non-dynamically allocated objects).
+    In C++, RAII is implemented via classes with constructors and destructors.
+    A resource (such as memory, a file or database handle, etc…) 
+    is typically acquired in the object’s constructor
+    (though it can be acquired after the object is created if that makes sense). 
+    
+    That resource can then be used while the object is alive. 
+    The resource is released in the destructor, 
+    when the object is destroyed. 
+    The primary advantage of RAII is that it helps prevent resource leaks 
+    (e.g. memory not being deallocated) 
+    as all resource-holding objects are cleaned up automatically.
+
+    The IntArray class at the top of this lesson is an example 
+    of a class that implements RAII -- allocation in the constructor, 
+    deallocation in the destructor. 
+    std::string and std::vector are examples of classes in the standard library
+    that follow RAII -- dynamic memory is acquired on initialization,
+    and cleaned up automatically on destruction.
+
+    A warning about the exit() function
+    
+    Note that if you use the exit() function, 
+    your program will terminate and no destructors will be called. 
+    Be wary if you’re relying on your destructors to do necessary cleanup work
+    (e.g. write something to a log file or database before exiting).
+
+    Summary
+
+    As you can see, when constructors and destructors are used together, 
+    your classes can initialize and clean up after themselves without the programmer
+    having to do any special work!
+    This reduces the probability of making an error,
+    and makes classes easier to use.
+
+    */
+
+} // simple goes out of scope here
 
 int main()
 {
-    void class_cpp_oop_86();
+    class_cpp_oop_87();
 
 
     return 0;
