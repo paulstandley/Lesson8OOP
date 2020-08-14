@@ -144,6 +144,47 @@ void class_cpp_oop_88()
     (just to the member function call, since that parameter 
     needs to be passed to the function and stored in memory).
 
+    Explicitly referencing “this”
+
+    Most of the time, you never need to explicitly reference the “this” pointer.
+    However, there are a few occasions where doing so can be useful:
+
+    First, if you have a constructor (or member function)
+    that has a parameter with the same name as a member variable, 
+    you can disambiguate them by using “this”
+
+    class Something
+    {
+    private:
+        int data;
+
+    public:
+        Something(int data)
+        {
+            this->data = data;
+            // this->data is the member, data is the local parameter
+        }
+    };
+
+    #Note that our constructor is taking a parameter of the same name
+    as a member variable.
+    In this case, “data” refers to the parameter, 
+    and “this->data” refers to the member variable. 
+    Although this is acceptable coding practice, 
+    we find using the “m_” prefix on all member variable names 
+    provides a better solution by preventing duplicate names altogether!
+
+    Some developers prefer to explicitly add this-> to all class members. 
+    We recommend that you avoid doing so, 
+    as it tends to make your code less readable for little benefit.
+    Using the m_ prefix is a more readable way to differentiate member variables
+    from non-member (local) variables.
+
+    Recommendation: Do not add this-> to all uses of your class members.
+    Only do so when you have a specific reason to.
+
+    //////////////////////////////////////////////////////////////////////
+
     */
 }
 
