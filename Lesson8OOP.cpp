@@ -58,7 +58,91 @@ void class_cpp_oop_88()
     and that m_id actually refers to simple.m_id.
     Let’s examine the mechanics behind how this works.
 
+    ////////////////////////////////////////////////////////////
+
     The hidden *this pointer
+
+    Take a look at the following line of code from the example above:
+
+    simple.setID(2);
+
+    Although the call to function setID() looks like it only has one argument, 
+    it actually has two! When compiled, 
+    the compiler converts simple.setID(2);
+    into the following:
+
+    setID(&simple, 2); 
+    
+    note that simple has been changed from an object prefix to a function argument!
+
+    Note that this is now just a standard function call,
+    and the object simple (which was formerly an object prefix)
+    is now passed by address as an argument to the function.
+
+    But that’s only half of the answer. 
+    Since the function call now has an added argument, 
+    the member function definition needs to be modified to accept (and use)
+    this argument as a parameter. 
+
+    Consequently, the following member function:
+
+    void setID(int id) { m_id = id; }
+
+    is converted by the compiler into:
+
+    void setID(Simple* const this, int id) { this->m_id = id; }
+
+    When the compiler compiles a normal member function,
+    it implicitly adds a new parameter to the function named “this”. 
+    The this pointer is a hidden const pointer that holds the 
+    address of the object the member function was called on.
+
+    There’s just one more detail to take care of. 
+    Inside the member function, any class members (functions and variables) 
+    also need to be updated so they refer to the object the member function
+    was called on. 
+    This is easily done by adding a “this->” prefix to each of them.
+    Thus, in the body of function setID(), m_id (which is a class member variable)
+    has been converted to this->m_id. Thus, 
+    when “this” points to the address of simple, 
+    this->m_id will resolve to simple.m_id.
+
+    Putting it all together:
+
+    1) When we call simple.setID(2), the compiler actually calls setID(&simple, 2).
+
+    2) Inside setID(), the “this” pointer holds the address of object simple.
+
+    3) Any member variables inside setID() are prefixed with “this->”.
+    So when we say m_id = id, the compiler is actually executing this->m_id = id, 
+    which in this case updates simple.m_id to id.
+
+    The good news is that all of this happens automatically, 
+    and it doesn’t really matter whether you remember how it works or not. 
+    All you need to remember is that all normal member functions have a “this” pointer
+    that refers to the object the function was called on.
+
+    /////////////////////////////////////////////////////////////////////////////////
+
+    “this” always points to the object being operated on
+
+    New programmers are sometimes confused about how many “this” pointers exist. 
+    Each member function has a “this” pointer parameter that is set to the address
+    of the object being operated on. 
+    Consider:
+
+    Simple A(1); // this = &A inside the Simple constructor
+    Simple B(2); // this = &B inside the Simple constructor
+    A.setID(3); // this = &A inside member function setID
+    B.setID(4); // this = &B inside member function setID
+
+    Note that the “this” pointer alternately holds the address of object A or B
+    depending on whether we’ve called a member function on object A or B.
+
+    Because “this” is just a function parameter, 
+    it doesn’t add any memory usage to your class
+    (just to the member function call, since that parameter 
+    needs to be passed to the function and stored in memory).
 
     */
 }
