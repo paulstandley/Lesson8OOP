@@ -14,198 +14,89 @@
 #include <iostream>
 
 
-class Somethingsmv
+void class_cpp_oop_812()
 {
-private:
-    static int s_idGenerator;
-    int m_id;
-
-public:
-    Somethingsmv() { m_id = s_idGenerator++; } // grab the next value from the id generator
-
-    int getID() const { return m_id; }
-};
-
-// Note that we're defining and initializing s_idGenerator 
-// even though it is declared as private above.
-// This is okay since the definition isn't subject to access controls.
-int Somethingsmv::s_idGenerator = 1; // start our ID generator with value 1
-
-void class_cpp_oop_811()
-{
-    /*Static member variables
+    std::cout << "Static member functions\n";
     
-    static variables keep their values 
-    and are not destroyed even after they go out of scope
+    /*Static member functions
 
-    The static keyword has another meaning when applied to global variables
-    -- it gives them internal linkage
-    (which restricts them from being seen/used outside of the file they are defined in).
-    Because global variables are typically avoided, 
-    the static keyword is not often used in this capacity.
-
-    Static member variables
+    In the previous lesson on 8.11 -- Static member variables,
+    you learned that static member variables are member variables that belong 
+    to the class rather than objects of the class. 
     
-    C++ introduces two more uses for the static keyword when applied to classes:
-    static member variables, 
-    and static member functions. 
-    Fortunately, these uses are fairly straightforward. 
-    
-    Member variables of a class can be made static by using the static keyword. 
-    Unlike normal member variables, 
-    static member variables are shared by all objects of the class
-
-    Because s_value is a static member variable, 
-    s_value is shared between all objects of the class. 
-    Consequently, first.s_value is the same variable as second.s_value. 
-    The value we set using first can be accessed using second!
-
-    //////////////////////////////////////////////////////////////////////////////
-
-    Static members are not associated with class objects
-
-    Although you can access static members through objects of the class 
-    (as shown with first.s_value and second.s_value in the example above),
-    it turns out that static members exist even if no objects 
-    of the class have been instantiated! Much like global variables,
-    they are created when the program starts, and destroyed when the program ends.
-
-    Consequently, it is better to think of static members as belonging to the 
-    class itself, not to the objects of the class.
-    Because s_value exists independently of any class objects, 
-    it can be accessed directly using the class name and the scope
-    resolution operator (in this case, Something::s_value):
+    If the static member variables are public,
+    we can access them directly using the class name and the scope resolution operator.
+    But what if the static member variables are private?
 
     class Something
     {
-    public:
-        static int s_value; // declares the static member variable
+    private:
+        static int s_value;
     };
-
-    int Something::s_value{ 1 }; // defines the static member variable (we'll discuss this section below)
-
+    int Something::s_value{ 1 }; 
+    // initializer, this is okay even though s_value is private since it's a definition
     int main()
     {
-        // note: we're not instantiating any objects of type Something
-
-        Something::s_value = 2;
-        std::cout << Something::s_value << '\n';
-        return 0;
+        // how do we access Something::s_value since it is private?
     }
 
-    In the above snippet,
-    s_value is referenced by class name rather than through an object.
-    Note that we have not even instantiated an object of type Something,
-    but we are still able to access and use Something::s_value. 
-    This is the preferred method for accessing static members.
+    In this case, 
+    we can’t access Something::s_value directly from main(),
+    because it is private. 
+    Normally we access private members through public member functions. 
+    While we could create a normal public member function to access s_value, 
+    we’d then need to instantiate an object of the class type to use the function!
+    We can do better. 
+    It turns out that we can also make functions static.
 
-    /////////////////////////////////////////////////////////////////////////
+    Like static member variables, 
+    static member functions are not attached to any particular object.
+    Here is the above example with a static member function accessor:
 
-    Defining and initializing static member variables
-
-    When we declare a static member variable inside a class,
-    we’re telling the compiler about the existence of a static member variable, 
-    but not actually defining it (much like a forward declaration).
-    
-    Because static member variables are not part of the individual class objects 
-    (they are treated similarly to global variables, 
-    and get initialized when the program starts),
-    you must explicitly define the static member outside of the class,
-    in the global scope.
-
-    int Something::s_value{ 1 }; // defines the static member variable
-
-    This line serves two purposes: 
-    it instantiates the static member variable (just like a global variable), 
-    and optionally initializes it.
-    In this case, we’re providing the initialization value 1.
-    If no initializer is provided, C++ initializes the value to 0.
-
-    Note that this static member definition is not subject to access controls:
-    you can define and initialize the value even if it’s declared as private
-    (or protected) in the class.
-
-    If the class is defined in a .h file, 
-    the static member definition is usually placed in the associated code file
-    for the class (e.g. Something.cpp).
-    
-    If the class is defined in a .cpp file,
-    the static member definition is usually placed directly underneath the class. 
-    Do not put the static member definition in a header file 
-    (much like a global variable, if that header file gets included more than once,
-    you’ll end up with multiple definitions, which will cause a compile error).
-
-    //////////////////////////////////////////////////////////////////////////////
-
-    Inline initialization of static member variables
-
-    There are a few shortcuts to the above.
-    First, when the static member is a const integral type 
-    (which includes char and bool) or a const enum,
-    the static member can be initialized inside the class definition:
-
-    class Whatever
+    class Something
     {
+    private:
+        static int s_value;
     public:
-        static const int s_value{ 4 };
-        // a static const int can be declared and initialized directly
+        static int getValue() { return s_value; } // static member function
     };
-
-    In the above example, because the static member variable is a const int,
-    no explicit definition line is needed.
-
-    Second, static constexpr members can be initialized inside the class definition:
-
-    #include <array>
-
-    class Whatever
+    int Something::s_value{ 1 }; // initializer
+    int main()
     {
-    public:
-        static constexpr double s_value{ 2.2 }; // ok
-        static constexpr std::array<int, 3> s_array{ 1, 2, 3 }; 
-        // this even works for classes that support constexpr initialization
-    };
+        std::cout << Something::getValue() << '\n';
+    }
 
-    An example of static member variables
+    Because static member functions are not attached to a particular object, 
+    they can be called directly by using the class name 
+    and the scope resolution operator. 
+    Like static member variables, 
+    they can also be called through objects of the class type, 
+    though this is not recommended.
 
-    Why use static variables inside classes?
+    /////////////////////////////////////////////////////////////////////////////
 
-    One great example is to assign a unique ID to every instance of the class.
+    Static member functions have no *this pointer
 
-    */
-    
-    Somethingsmv firstsmv;
-    Somethingsmv secondsmv;
-    Somethingsmv thirdsmv;
+    Static member functions have two interesting quirks worth noting.
+    First, because static member functions are not attached to an object, 
+    they have no this pointer!
+    This makes sense when you think about it -- 
+    the this pointer always points to the object 
+    that the member function is working on. 
+    Static member functions do not work on an object,
+    so the this pointer is not needed.
 
-    std::cout << firstsmv.getID() << '\n';
-    std::cout << secondsmv.getID() << '\n';
-    std::cout << thirdsmv.getID() << '\n';
+    Second, static member functions can directly access other static members 
+    (variables or functions), but not non-static members.
+    This is because non-static members must belong to a class object,
+    and static member functions have no class object to work with!
 
-    /*Because s_idGenerator is shared by all Something objects,
-    when a new Something object is created, 
-    the constructor grabs the current value out of s_idGenerator
-    and then increments the value for the next object. 
-    
-    This guarantees that each instantiated Something object
-    receives a unique id (incremented in the order of creation). 
-    This can really help when debugging multiple items in an array,
-    as it provides a way to tell multiple objects of the same class type apart!
-
-    Static member variables can also be useful when the class needs
-    to utilize an internal lookup table 
-    (e.g. an array used to store a set of pre-calculated values). 
-    
-    By making the lookup table static, only one copy exists for all objects,
-    rather than making a copy for each object instantiated. 
-    This can save substantial amounts of memory.
-    
     */
 }
 
 int main()
 {
-    class_cpp_oop_811();
+    class_cpp_oop_812();
 
 
     return 0;

@@ -24,6 +24,8 @@ void class_cpp_oop_88();
 void class_cpp_oop_89();
 
 void class_cpp_oop_810();
+void class_cpp_oop_811();
+void class_cpp_oop_812();
 
 
 
