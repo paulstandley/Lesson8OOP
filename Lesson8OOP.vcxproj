@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Date.cpp" />
     <ClCompile Include="Lesson81.cpp" />
     <ClCompile Include="Lesson82.cpp" />
     <ClCompile Include="Lesson83.cpp" />
@@ -164,6 +165,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Date.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
