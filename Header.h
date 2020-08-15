@@ -23,6 +23,8 @@ void class_cpp_oop_87();
 void class_cpp_oop_88();
 void class_cpp_oop_89();
 
+void class_cpp_oop_810();
+
 
 #endif // LESSON_8_OOP
 
