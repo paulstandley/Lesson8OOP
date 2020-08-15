@@ -14,6 +14,23 @@
 #include <iostream>
 
 
+class Somethingsmv
+{
+private:
+    static int s_idGenerator;
+    int m_id;
+
+public:
+    Somethingsmv() { m_id = s_idGenerator++; } // grab the next value from the id generator
+
+    int getID() const { return m_id; }
+};
+
+// Note that we're defining and initializing s_idGenerator 
+// even though it is declared as private above.
+// This is okay since the definition isn't subject to access controls.
+int Somethingsmv::s_idGenerator = 1; // start our ID generator with value 1
+
 void class_cpp_oop_811()
 {
     /*Static member variables
@@ -120,6 +137,69 @@ void class_cpp_oop_811()
 
     //////////////////////////////////////////////////////////////////////////////
 
+    Inline initialization of static member variables
+
+    There are a few shortcuts to the above.
+    First, when the static member is a const integral type 
+    (which includes char and bool) or a const enum,
+    the static member can be initialized inside the class definition:
+
+    class Whatever
+    {
+    public:
+        static const int s_value{ 4 };
+        // a static const int can be declared and initialized directly
+    };
+
+    In the above example, because the static member variable is a const int,
+    no explicit definition line is needed.
+
+    Second, static constexpr members can be initialized inside the class definition:
+
+    #include <array>
+
+    class Whatever
+    {
+    public:
+        static constexpr double s_value{ 2.2 }; // ok
+        static constexpr std::array<int, 3> s_array{ 1, 2, 3 }; 
+        // this even works for classes that support constexpr initialization
+    };
+
+    An example of static member variables
+
+    Why use static variables inside classes?
+
+    One great example is to assign a unique ID to every instance of the class.
+
+    */
+    
+    Somethingsmv firstsmv;
+    Somethingsmv secondsmv;
+    Somethingsmv thirdsmv;
+
+    std::cout << firstsmv.getID() << '\n';
+    std::cout << secondsmv.getID() << '\n';
+    std::cout << thirdsmv.getID() << '\n';
+
+    /*Because s_idGenerator is shared by all Something objects,
+    when a new Something object is created, 
+    the constructor grabs the current value out of s_idGenerator
+    and then increments the value for the next object. 
+    
+    This guarantees that each instantiated Something object
+    receives a unique id (incremented in the order of creation). 
+    This can really help when debugging multiple items in an array,
+    as it provides a way to tell multiple objects of the same class type apart!
+
+    Static member variables can also be useful when the class needs
+    to utilize an internal lookup table 
+    (e.g. an array used to store a set of pre-calculated values). 
+    
+    By making the lookup table static, only one copy exists for all objects,
+    rather than making a copy for each object instantiated. 
+    This can save substantial amounts of memory.
+    
     */
 }
 
