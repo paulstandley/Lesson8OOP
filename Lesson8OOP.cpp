@@ -54,6 +54,18 @@ void printDatef(const DateConst& date)
     std::cout << date.getYear() << '/' << date.getMonth() << '/' << date.getDay() << '\n';
 }
 
+class Somethingocncf
+{
+private:
+    std::string m_value;
+
+public:
+    Somethingocncf(const std::string& value = "") : m_value{ value } {}
+
+    const std::string& getValue() const { return m_value; } // getValue() for const objects
+    std::string& getValue() { return m_value; } // getValue() for non-const objects
+};
+
 void class_cpp_oop_810()
 {
     /*Const class objects and member functions
@@ -332,11 +344,48 @@ void class_cpp_oop_810()
 
     ///////////////////////////////////////////////////////////////////////////////
 
+    Overloading const and non-const function
 
+    Finally, although it is not done very often, 
+    it is possible to overload a function in such a way to have
+    a const and non-const version of the same function:
+
+    The const version of the function will be called on any const objects, 
+    and the non-const version will be called on any non-const objects:
 
     */
 
+    Somethingocncf somethingocncf{};
+    somethingocncf.getValue() = "Hi"; // calls non-const getValue();
+
+    const Somethingocncf something2ocncf{};
+    something2ocncf.getValue(); // calls const getValue();
+
+    /*Overloading a function with a const and non-const version is typically
+    done when the return value needs to differ in constness. 
+    In the example above, the non-const version of getValue()
+    will only work with non-const objects,
+    but is more flexible in that we can use it to both read and write m_value 
+    (which we do by assigning the string “Hi”).
+
+    The const version of getValue() 
+    will work with either const or non-const objects,
+    but returns a const reference,
+    to ensure we can’t modify the const object’s data.
+
+    This works because the const-ness of the function is considered
+    part of the function’s signature, 
+    so a const and non-const function which differ only in 
+    const-ness are considered distinct.
+
+    Summary
+
+    Because passing objects by const reference is common, 
+    your classes should be const-friendly. 
+    That means making any member function that does not modify 
+    the state of the class object const!
     
+    */
 
 }
 
