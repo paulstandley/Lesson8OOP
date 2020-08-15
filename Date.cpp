@@ -1,4 +1,5 @@
 #include "pch.h"
+/*
 #include "Date.h"
 
 // Date constructor
@@ -14,3 +15,5 @@ void Date::SetDate(int year, int month, int day)
     m_day = day;
     m_year = year;
 }
+
+*/

@@ -1,6 +1,7 @@
 #ifndef DATE_H
 #define DATE_H
 
+/*
 class Date
 {
 private:
@@ -28,4 +29,5 @@ public:
     int getDay() const { return m_day; }
 };
 
+*/
 #endif
