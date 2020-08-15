@@ -9,13 +9,23 @@ private:
     int m_day;
 
 public:
-    Date(int year, int month, int day);
+    Date(int year, int month, int day)
+    {
+        setDate(year, month, day);
+    }
 
-    void SetDate(int year, int month, int day);
+    // setDate() cannot be const, modifies member variables
+    void setDate(int year, int month, int day)
+    {
+        m_year = year;
+        m_month = month;
+        m_day = day;
+    }
 
-    int getYear() { return m_year; }
-    int getMonth() { return m_month; }
-    int getDay() { return m_day; }
+    // The following getters can all be made const
+    int getYear() const { return m_year; }
+    int getMonth() const { return m_month; }
+    int getDay() const { return m_day; }
 };
 
 #endif

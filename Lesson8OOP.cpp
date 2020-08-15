@@ -15,6 +15,45 @@
 #include <iostream>
 
 
+class DateConst
+{
+private:
+    int m_year;
+    int m_month;
+    int m_day;
+
+public:
+    DateConst(int year, int month, int day)
+    {
+        setDate(year, month, day);
+    }
+
+    // setDate() cannot be const, modifies member variables
+    void setDate(int year, int month, int day)
+    {
+        m_year = year;
+        m_month = month;
+        m_day = day;
+    }
+
+    // The following getters can all be made const
+    int getYear() const { return m_year; }
+    int getMonth() const { return m_month; }
+    int getDay() const { return m_day; }
+};
+
+// note: We're passing date by const reference here to avoid making a copy of date
+void printDateh(const Date& date)
+{
+    std::cout << date.getYear() << '/' << date.getMonth() << '/' << date.getDay() << '\n';
+}
+
+// note: We're passing date by const reference here to avoid making a copy of dateconst
+void printDatef(const DateConst& date)
+{
+    std::cout << date.getYear() << '/' << date.getMonth() << '/' << date.getDay() << '\n';
+}
+
 void class_cpp_oop_810()
 {
     /*Const class objects and member functions
@@ -245,6 +284,32 @@ void class_cpp_oop_810()
     so that it can be called by const objects.
 
     /////////////////////////////////////////////////////////////////////////////////////
+
+    Const references
+
+    Although instantiating const class objects is one way to create const objects,
+    a more common way is by passing an object to a function by const reference.
+
+    In the lesson on passing arguments by reference,
+    we covered the merits of passing class arguments by 
+    const reference instead of by value. 
+    
+    To recap, passing a class argument by value causes a copy of the class to be made
+    (which is slow) -- most of the time, we don’t need a copy,
+    a reference to the original argument works just fine, 
+    and is more performant because it avoids the needless copy.
+    
+    We typically make the reference const in order to ensure the function
+    does not inadvertently change the argument, 
+    and to allow the function to work with R-values (e.g. literals), 
+    which can be passed as const references, but not non-const references.
+
+    ///////////////////////////////////////////////////////////////////////////////
+
+    Overloading const and non-const function
+
+    Finally, although it is not done very often, it is possible to overload a function
+    in such a way to have a const and non-const version of the same function:
 
     */
 
