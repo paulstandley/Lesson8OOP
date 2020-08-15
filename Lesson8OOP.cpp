@@ -14,6 +14,24 @@
 #include <iostream>
 
 
+class IDGeneratorntp
+{
+private:
+    static int s_nextID; // Here's the declaration for a static member
+
+public:
+    static int getNextIDntp(); // Here's the declaration for a static function
+};
+
+// Here's the definition of the static member outside the class.  
+// Note we don't use the static keyword here.
+// We'll start generating IDs at 1
+int IDGeneratorntp::s_nextID{ 1 };
+
+// Here's the definition of the static function outside of the class. 
+// Note we don't use the static keyword here.
+int IDGeneratorntp::getNextIDntp() { return s_nextID++; }
+
 void class_cpp_oop_812()
 {
     std::cout << "Static member functions\n";
@@ -92,6 +110,21 @@ void class_cpp_oop_812()
     and static member functions have no class object to work with!
 
     */
+
+    for (int count{ 0 }; count < 5; ++count)
+        std::cout << "The next ID is: " << IDGeneratorntp::getNextIDntp() << '\n';
+
+    /*Note that because all the data and functions in this class are static,
+    we don’t need to instantiate an object of the class 
+    to make use of its functionality! 
+    This class utilizes a static member variable to hold the value 
+    of the next ID to be assigned,
+    and provides a static member function to return that ID and increment it.
+
+    /////////////////////////////////////////////////////////////////////////////////
+    
+    */
+
 }
 
 int main()
