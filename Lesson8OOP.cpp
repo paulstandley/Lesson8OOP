@@ -14,6 +14,21 @@
 #include <iostream>
 
 
+class CalcFuncCha
+{
+private:
+    int m_value;
+
+public:
+    CalcFuncCha() { m_value = 0; }
+
+    CalcFuncCha& add(int value) { m_value += value; return *this; }
+    CalcFuncCha& sub(int value) { m_value -= value; return *this; }
+    CalcFuncCha& mult(int value) { m_value *= value; return *this; }
+
+    int getValue() { return m_value; }
+};
+
 void class_cpp_oop_88()
 {
     /* The hidden “this” pointer
@@ -185,7 +200,143 @@ void class_cpp_oop_88()
 
     //////////////////////////////////////////////////////////////////////
 
+    Chaining member functions
+
+    Second, 
+    it can sometimes be useful to have a class member function return 
+    the object it was working with as a return value.
+    The primary reason to do this is to allow a series of member functions
+    to be “chained” together, 
+    so several member functions can be called on the same object!
+    You’ve actually been doing this for a long time.
+    Consider this common example where you’re outputting 
+    more than one bit of text using std::cout:
+
+    std::cout << "Hello, " << userName;
+
+    In this case, std::cout is an object, 
+    and operator << is a member function that operates on that object.
+    The compiler evaluates the above snippet like this:
+
+    (std::cout << "Hello, ") << userName;
+
+    First, 
+    operator << uses std::cout and the string literal
+    “Hello, ” to print “Hello, ” to the console. 
+    However, since this is part of an expression, 
+    operator << also needs to return a value (or void).
+    If operator << returned void, you’d end up with this:
+
+    (void) << userName;
+
+    which clearly doesn’t make any sense (and the compiler would throw an error). 
+    Instead, operator << returns *this, which in this context is the std::cout object.
+    That way, after the first operator << has been evaluated, we get:
+
+    (std::cout) << userName;
+
+    In this way,
+    we only need to specify the object (in this case, std::cout) once,
+    and each function call passes it on to the next function to work with,
+    allowing us to chain multiple commands together.
+
+    We can implement this kind of behavior ourselves. Consider the following class:
+
+    class Calc
+    {
+    private:
+        int m_value;
+    public:
+        Calc() { m_value = 0; }
+        void add(int value) { m_value += value; }
+        void sub(int value) { m_value -= value; }
+        void mult(int value) { m_value *= value; }
+        int getValue() { return m_value; }
+    };
+
+    If you wanted to add 5, subtract 3, and multiply by 4, you’d have to do this:
+
+    #include <iostream>
+    int main()
+    {
+        Calc calc;
+        calc.add(5); // returns void
+        calc.sub(3); // returns void
+        calc.mult(4); // returns void
+        std::cout << calc.getValue() << '\n';
+        return 0;
+    }
+
+    However, if we make each function return *this,
+    we can chain the calls together.
+    Here is the new version of Calc with “chainable” functions:
+
+    class Calc
+    {
+    private:
+        int m_value;
+    public:
+        Calc() { m_value = 0;
+        Calc& add(int value) { m_value += value; return *this; }
+        Calc& sub(int value) { m_value -= value; return *this; }
+        Calc& mult(int value) { m_value *= value; return *this; }
+        int getValue() { return m_value; }
+    };
+
+    Note that add(), sub() and mult() are now returning *this.
+    Consequently, this allows us to do the following:
+
+    #include <iostream>
+    int main()
+    {
+        Calc calc;
+        calc.add(5).sub(3).mult(4);
+        std::cout << calc.getValue() << '\n';
+        return 0;
+    }
+
     */
+
+    CalcFuncCha calcfc;
+    calcfc.add(5).sub(3).mult(4);
+
+    std::cout << calcfc.getValue() << '\n';
+
+    /*We have effectively condensed three lines into one expression! 
+    Let’s take a closer look at how this works.
+
+    First, calc.add(5) is called, which adds 5 to our m_value. add()
+    then returns *this, which is just a reference to calc, 
+    so calc will be the object used in the subsequent evaluation.
+
+    Next calc.sub(3) evaluates, which subtracts 3 from m_value 
+    and again returns calc.
+
+    Finally, calc.mult(4) multiplies m_value by 4 and returns calc, 
+    which isn’t used further, and is thus ignored.
+
+    Since each function modified calc as it was executed, 
+    calc’s m_value now contains the value (((0 + 5) - 3) * 4), which is 8.
+
+    Summary
+
+    The “this” pointer is a hidden parameter implicitly
+    added to any non-static member function. 
+    Most of the time, you will not need to access it directly,
+    but you can if needed.
+    
+    It’s worth noting that “this” is a const pointer -- 
+    you can change the value of the underlying object it points to,
+    but you can not make it point to something else!
+
+    By having functions that would otherwise return 
+    void return *this instead, 
+    you can make those functions chainable. 
+    
+    This is most often used when overloading operators for your classes
+    
+    */
+
 }
 
 
