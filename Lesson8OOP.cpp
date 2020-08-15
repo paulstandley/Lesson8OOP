@@ -161,9 +161,94 @@ void class_cpp_oop_810()
 
     //////////////////////////////////////////////////////////////////////////////////
 
+    Const member functions
 
+    Now, consider the following line of code:
+
+    std::cout << something.getValue();
+
+    Perhaps surprisingly,
+    this will also cause a compile error, even though getValue()
+    doesn’t do anything to change a member variable!
+    It turns out that const class objects can only explicitly 
+    call const member functions, 
+    and getValue() has not been marked as a const member function.
+
+    A const member function is a member function that guarantees 
+    it will not modify the object or call any non-const member functions
+    (as they may modify the object).
+
+    To make getValue() a const member function,
+    we simply append the const keyword to the function prototype,
+    after the parameter list, but before the function body:
+
+    class Something
+    {
+    public:
+        int m_value;
+        Something(): m_value{0} { }
+        void resetValue() { m_value = 0; }
+        void setValue(int value) { m_value = value; }
+        int getValue() const { return m_value; }
+        // note addition of const keyword after parameter list, but before function body
+    };
+
+    Now getValue() has been made a const member function, 
+    which means we can call it on any const objects.
+
+    For member functions defined outside of the class definition, 
+    the const keyword must be used on both the function 
+    prototype in the class definition and on the function definition:
+
+    class Something
+    {
+    public:
+        int m_value;
+
+        Something(): m_value{0} { }
+
+        void resetValue() { m_value = 0; }
+        void setValue(int value) { m_value = value; }
+
+        int getValue() const; // note addition of const keyword here
+    };
+
+    int Something::getValue() const // and here
+    {
+        return m_value;
+    }
+
+    Futhermore, 
+    any const member function that attempts to change a member variable
+    or call a non-const member function will cause a compiler error to occur. 
+    For example:
+
+    class Something
+    {
+    public:
+        int m_value ;
+
+        void resetValue() const { m_value = 0; } // compile error, const functions can't change member variables.
+    };
+
+    In this example, resetValue() has been marked as a const member function,
+    but it attempts to change m_value. This will cause a compiler error.
+
+    Note that constructors cannot be marked as const. 
+    This is because constructors need to be able to initialize their member variables,
+    and a const constructor would not be able to do so. 
+    Consequently, the language disallows const constructors.
+
+    Rule
+
+    Make any member function that does not modify the state of the class object const,
+    so that it can be called by const objects.
+
+    /////////////////////////////////////////////////////////////////////////////////////
 
     */
+
+    
 
 }
 
