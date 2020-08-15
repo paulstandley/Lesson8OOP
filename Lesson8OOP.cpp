@@ -311,6 +311,29 @@ void class_cpp_oop_810()
     Finally, although it is not done very often, it is possible to overload a function
     in such a way to have a const and non-const version of the same function:
 
+    Const references
+
+    Although instantiating const class objects is one way to create const objects, 
+    a more common way is by passing an object to a function by const reference.
+
+    In the lesson on passing arguments by reference,
+    we covered the merits of passing class arguments by const reference
+    instead of by value.
+    To recap, passing a class argument by value causes a copy of the class
+    to be made (which is slow) -- most of the time, 
+    we don’t need a copy, a reference to the original argument works just fine, 
+    and is more performant because it avoids the needless copy.
+    
+    We typically make the reference const in order to ensure the function 
+    does not inadvertently change the argument,
+    and to allow the function to work with R-values (e.g. literals),
+    which can be passed as const references,
+    but not non-const references.
+
+    ///////////////////////////////////////////////////////////////////////////////
+
+
+
     */
 
     
