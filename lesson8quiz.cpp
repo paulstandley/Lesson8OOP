@@ -8,9 +8,11 @@
 #include <cstdint>
 #include <string>
 #include <iostream>
+#include "Vector3d.h" // for creating Vector3d object
+#include "Point3d.h" // for creating Point3d object
 
 
-class Point3d
+class Point3dlq
 {
 private:
 	int m_x, m_y, m_z;
@@ -30,7 +32,7 @@ public:
 
 	// We can use the fact that access controls work on a per-class basis here
 	// to directly access the private members of Point3d parameter p
-	bool isEqual(const Point3d& p)
+	bool isEqual(const Point3dlq& p)
 	{
 		return (m_x == p.m_x && m_y == p.m_y && m_z == p.m_z);
 	}
@@ -112,11 +114,11 @@ void lesson83quiz()
 
 	*/
 
-	Point3d point1;
+	Point3dlq point1;
 	point1.setValues(1, 2, 3);
 	point1.print();
 
-	Point3d point2;
+	Point3dlq point2;
 	point2.setValues(1, 2, 3);
 
 	if (point1.isEqual(point2))
@@ -124,7 +126,7 @@ void lesson83quiz()
 	else
 		std::cout << "point1 and point2 are not equal\n";
 
-	Point3d point3;
+	Point3dlq point3;
 	point3.setValues(3, 4, 5);
 
 	if (point1.isEqual(point3))

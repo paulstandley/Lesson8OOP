@@ -9,6 +9,9 @@
 #include <string>
 #include <cstddef>
 #include <iostream>
+#include "Vector3d.h" // for creating Vector3d object
+#include "Point3d.h" // for creating Point3d object
+
 
 class Storagecf
 {

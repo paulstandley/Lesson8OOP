@@ -12,6 +12,8 @@
 #include <string>
 #include <cstddef>
 #include <iostream>
+#include "Vector3d.h" // for creating Vector3d object
+#include "Point3d.h" // for creating Point3d object
 
 
 class Vector3d1
@@ -170,6 +172,13 @@ void lesson813quiz()
 
     //1c) Reimplement the solution to quiz question 1b using 5 separate files:
     //Point3d.h, Point3d.cpp, Vector3d.h, Vector3d.cpp, and main.cpp.
+
+    Point3d p{ 1.0, 2.0, 3.0 };
+    Vector3d v{ 2.0, 2.0, -3.0 };
+
+    p.print();
+    p.moveByVector(v);
+    p.print();
 
     //Thanks to reader Shiva for the suggestionand solution.
 }
