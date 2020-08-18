@@ -14,6 +14,39 @@
 #include <iostream>
 
 
+class Storagecf
+{
+private:
+    int m_nValue;
+    double m_dValue;
+public:
+    Storagecf(int nValue, double dValue)
+    {
+        m_nValue = nValue;
+        m_dValue = dValue;
+    }
+
+    // Make the Display class a friend of Storage
+    friend class Displaycf;
+};
+
+class Displaycf
+{
+private:
+    bool m_displayIntFirst;
+
+public:
+    Displaycf(bool displayIntFirst) { m_displayIntFirst = displayIntFirst; }
+
+    void displayItem(const Storagecf& storage)
+    {
+        if (m_displayIntFirst)
+            std::cout << storage.m_nValue << " " << storage.m_dValue << '\n';
+        else // display double first
+            std::cout << storage.m_dValue << " " << storage.m_nValue << '\n';
+    }
+};
+
 class Accumulator
 {
 private:
@@ -121,6 +154,33 @@ void class_cpp_oop_813()
     This gives all of the members of the friend class access to the private members 
     of the other class
 
+    */
+
+    Storagecf storagecf(5, 6.7);
+    Displaycf displaycf(false);
+    displaycf.displayItem(storagecf);
+
+    /*Because the Display class is a friend of Storage, 
+    any of Display’s members that use a Storage class object can access 
+    the private members of Storage directly.
+
+    A few additional notes on friend classes.
+    First, even though Display is a friend of Storage,
+    Display has no direct access to the *this pointer of Storage objects. 
+    Second, just because Display is a friend of Storage,
+    that does not mean Storage is also a friend of Display.
+    If you want two classes to be friends of each other, 
+    both must declare the other as a friend.
+    
+    Finally, if class A is a friend of B, and B is a friend of C,
+    that does not mean A is a friend of C.
+
+    Be careful when using friend functions and classes,
+    because it allows the friend function or class to violate encapsulation. 
+    If the details of the class change, 
+    the details of the friend will also be forced to change.
+    Consequently, limit your use of friend functions and classes to a minimum.
+    
     */
 
 }
