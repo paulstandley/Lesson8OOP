@@ -16,6 +16,89 @@
 #include "Point3d.h" // for creating Point3d object
 
 
+class Cents1
+{
+private:
+    int m_cents{};
+
+public:
+    Cents1(int cents) { m_cents = cents; }
+
+    int getCents1() const { return m_cents; }
+};
+
+void print1(const Cents1& cents)
+{
+    std::cout << cents.getCents1() << " cents\n";
+}
+
+class Cents2
+{
+private:
+    int m_cents{};
+
+public:
+    Cents2(int cents) { m_cents = cents; }
+
+    int getCents2() const { return m_cents; }
+};
+
+void print2(const Cents2& cents)
+{
+    std::cout << cents.getCents2() << " cents\n";
+}
+
+class Cents3
+{
+private:
+    int m_cents{};
+
+public:
+    Cents3(int cents) { m_cents = cents; }
+
+    int getCents3() const { return m_cents; }
+};
+
+Cents3 add3(const Cents3& c1, const Cents3& c2)
+{
+    Cents3 sum{ c1.getCents3() + c2.getCents3() };
+    return sum;
+}
+
+class Cents4
+{
+private:
+    int m_cents{};
+
+public:
+    Cents4(int cents) { m_cents = cents; }
+
+    int getCents4() const { return m_cents; }
+};
+
+Cents4 add4(const Cents4& c1, const Cents4& c2)
+{
+    // List initialization looks at the return type of the function
+    // and creates the correct object accordingly.
+    return { c1.getCents4() + c2.getCents4() }; // return anonymous Cents value
+}
+
+class Cents5
+{
+private:
+    int m_cents{};
+
+public:
+    Cents5(int cents) { m_cents = cents; }
+
+    int getCents5() const { return m_cents; }
+};
+
+Cents5 add5(const Cents5& c1, const Cents5& c2)
+{
+    return { c1.getCents5() + c2.getCents5() }; // return anonymous Cents value
+}
+
 void class_cpp_oop_814()
 {//Anonymous objects
     /*In certain cases, we need a variable only temporarily.
@@ -85,8 +168,96 @@ void class_cpp_oop_814()
 
     Anonymous class objects
 
-    Although our prior examples have been with built-in data types, it is possible to construct anonymous objects of our own class types as well. This is done by creating objects like normal, but omitting the variable name.
+    Although our prior examples have been with built-in data types, 
+    it is possible to construct anonymous objects of our own class types as well. 
+    This is done by creating objects like normal,
+    but omitting the variable name.
 
+    Cents cents{ 5 }; // normal variable
+    Cents{ 7 }; // anonymous object
+
+    In the above code, Cents{ 7 } will create an anonymous Cents object,
+    initialize it with the value 7, and then destroy it.
+    In this context, that isn’t going to do us much good.
+    So let’s take a look at an example where it can be put to good use:
+
+    */
+
+    Cents1 cents1{ 6 };
+    print1(cents1);
+
+    //Note that this example is very similar to the prior one using integers.
+    //In this case, our main() function is passing a Cents object 
+    //(named cents) to function print().
+
+    //We can simplify this program by using anonymous objects
+
+    print2(Cents2{ 12 }); 
+    // Note: Now we're passing an anonymous Cents value
+
+    //a slightly more complex example
+
+    Cents3 cents13{ 6 };
+    Cents3 cents23{ 8 };
+    Cents3 sum3{ add3(cents13, cents23) };
+    std::cout << "I have " << sum3.getCents3() << " cents.\n";
+
+    /*In the above example, 
+    we’re using quite a few named Cents values. 
+    In the add() function, 
+    we have a Cents value named sum that we’re using
+    as an intermediary value to hold the sum before we return it. 
+    And in function main(),
+    we have another Cents value named sum also used as an intermediary value.
+
+    We can make our program simpler by using anonymous values
+    
+    */
+
+    Cents4 cents14{ 6 };
+    Cents4 cents24{ 8 };
+    std::cout << "I have " << add4(cents14, cents24).getCents4() << " cents.\n"; 
+    // print anonymous Cents value
+
+    /*This version of add() functions identically to the one above, 
+    except it uses an anonymous Cents value instead of a named variable. 
+    Also note that in main(), 
+    we no longer use a named “sum” variable as temporary storage.
+    Instead, we use the return value of add() anonymously!
+
+    As a result, our program is shorter, cleaner, 
+    and generally easier to follow (once you understand the concept).
+
+    In fact, because cents1 and cents2 are only used in one place, 
+    we can anonymize this even further:
+    
+    */
+
+    std::cout << "I have " << add5(Cents5{ 6 }, Cents5{ 8 }).getCents5() << " cents.\n"; 
+    // print anonymous Cents value
+
+    /*Summary
+
+    In C++, anonymous objects are primarily used either to pass or return values 
+    without having to create lots of temporary variables to do so. 
+    Memory allocated dynamically is also done so anonymously
+    (which is why its address must be assigned to a pointer,
+    otherwise we’d have no way to refer to it).
+
+    However,
+    it is worth noting that anonymous objects are treated as rvalues 
+    (not lvalues, which have an address) -- therefore,
+    all rules about passing and returning rvalues apply.
+
+    It is also worth noting that because anonymous objects have expression scope,
+    they can only be used once. 
+    If you need to reference a value in multiple expressions, 
+    you should use a named variable instead.
+
+    Note: Some compilers, such as Visual Studio, 
+    will let you set non-const references to anonymous objects.
+    This is non-standard behavior.
+    
     */
 
 }
