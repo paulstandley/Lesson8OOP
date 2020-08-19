@@ -16,176 +16,84 @@
 #include "Point3d.h" // for creating Point3d object
 
 
-class Vector3d1
-{
-private:
-    double m_x{};
-    double m_y{};
-    double m_z{};
-
-public:
-    Vector3d1(double x = 0.0, double y = 0.0, double z = 0.0)
-        : m_x{ x }, m_y{ y }, m_z{ z }
+void class_cpp_oop_814()
+{//Anonymous objects
+    /*In certain cases, we need a variable only temporarily.
+    
+    #include <iostream>
+ 
+    int add(int x, int y)
     {
-
+        int sum{ x + y };
+        return sum;
+    }
+ 
+    int main()
+    {
+        std::cout << add(5, 3) << '\n'; 
+        return 0;
     }
 
-    void print() const
+    In the add() function, 
+    note that the sum variable is really only used as a 
+    temporary placeholder variable.
+    It doesn’t contribute much -- rather,
+    its only function is to transfer the result of the
+    expression to the return value.
+
+    There is actually an easier way to write the add()
+    function using an anonymous object. 
+    An anonymous object is essentially a value that has no name.
+    Because they have no name, there’s no way to refer to them 
+    beyond the point where they are created. 
+    
+    Consequently, they have “expression scope”, 
+    meaning they are created, evaluated,
+    and destroyed all within a single expression.
+
+        return x + y;
+
+    an anonymous object is created to hold and return the result of x + y
+    
+    When the expression x + y is evaluated, 
+    the result is placed in an anonymous object.
+    A copy of the anonymous object is then returned to the caller by value,
+    and the anonymous object is destroyed.
+
+    This works not only with return values, but also with function parameters.
+
+    void printValue(int value)
     {
-        std::cout << "Vector(" << m_x << " , " << m_y << " , " << m_z << ")\n";
+        std::cout << value;
     }
 
-    friend class Point3d1; // Point3d is now a friend of class Vector3d
-};
-
-class Point3d1
-{
-private:
-    double m_x{};
-    double m_y{};
-    double m_z{};
-
-public:
-    Point3d1(double x = 0.0, double y = 0.0, double z = 0.0)
-        : m_x{ x }, m_y{ y }, m_z{ z }
+    int main()
     {
-
+        printValue(5 + 3);
+        return 0;
     }
 
-    void print() const
-    {
-        std::cout << "Point(" << m_x << " , " << m_y << " , " << m_z << ")\n";
-    }
+    In this case, the expression 5 + 3 is evaluated to produce the result 8, 
+    which is placed in an anonymous object. 
+    A copy of this anonymous object is then passed to the printValue() function,
+    (which prints the value 8) and then is destroyed.
 
-    void moveByVector1(const Vector3d1& v)
-    {
-        // implement this function as a friend of class Vector3d
-        m_x += v.m_x;
-        m_y += v.m_y;
-        m_z += v.m_z;
-    }
-};
+    Note how much cleaner this keeps our code -- we don’t have to litter
+    the code with temporary variables that are only used once.
 
-class Vector3d2; // first, we need to tell the compiler that a class named Vector3d exists
+    //////////////////////////////////////////////////////////////////////////////
 
-class Point3d2
-{
-private:
-    double m_x{};
-    double m_y{};
-    double m_z{};
+    Anonymous class objects
 
-public:
-    Point3d2(double x = 0.0, double y = 0.0, double z = 0.0)
-        : m_x{ x }, m_y{ y }, m_z{ z }
-    {
-
-    }
-
-    void print() const
-    {
-        std::cout << "Point(" << m_x << " , " << m_y << " , " << m_z << ")\n";
-    }
-
-    void moveByVector2(const Vector3d2& v); // so we can use Vector3d here
-       // note: we can't define this function here, because Vector3d hasn't been declared yet (just forward declared)
-};
-
-class Vector3d2
-{
-private:
-    double m_x{};
-    double m_y{};
-    double m_z{};
-
-public:
-    Vector3d2(double x = 0.0, double y = 0.0, double z = 0.0)
-        : m_x{ x }, m_y{ y }, m_z{ z }
-    {
-
-    }
-
-    void print() const
-    {
-        std::cout << "Vector(" << m_x << " , " << m_y << " , " << m_z << ")\n";
-    }
-
-    friend void Point3d2::moveByVector2(const Vector3d2& v); // Point3d::moveByVector() is now a friend of class Vector3d
-};
-
-// Now that Vector3d has been declared, we can define the function Point3d::moveByVector()
-void Point3d2::moveByVector2(const Vector3d2& v)
-{
-    m_x += v.m_x;
-    m_y += v.m_y;
-    m_z += v.m_z;
-}
-
-void lesson813quiz()
-{
-    /*
-    1) In geometry, a point is a position in space.
-    We can define a point in 3d-space as the set of coordinates x, y, and z.
-    For example, the Point(2.0, 1.0, 0.0) would be the point at 
-    coordinate space x=2.0, y=1.0, and z=0.0.
-
-    In physics, a vector is a quantity that has a
-    magnitude (length) and a direction (but no position).
-    We can define a vector in 3d-space as an x, y, and z value 
-    representing the direction of the vector along the x, y, and z axis
-    (the length can be derived from these). 
-    For example, the Vector(2.0, 0.0, 0.0)
-    would be a vector representing a direction along the positive x-axis (only), 
-    with length 2.0.
-
-    A Vector can be applied to a Point to move the Point to a new position. 
-    This is done by adding the vector’s direction to the point’s position
-    to yield a new position. 
-    For example, Point(2.0, 1.0, 0.0) + Vector(2.0, 0.0, 0.0)
-    would yield the point (4.0, 1.0, 0.0).
-
-    Points and Vectors are often used in computer graphics 
-    (the point to represent vertices of shape, 
-    and vectors represent movement of the shape).
+    Although our prior examples have been with built-in data types, it is possible to construct anonymous objects of our own class types as well. This is done by creating objects like normal, but omitting the variable name.
 
     */
 
-    //1a) Make Point3d a friend class of Vector3d, 
-    //and implement function Point3d::moveByVector()
-
-    Point3d1 p1{ 1.0, 2.0, 3.0 };
-    Vector3d1 v1{ 2.0, 2.0, -3.0 };
-
-    p1.print();
-    p1.moveByVector1(v1);
-    p1.print();
-
-    //1b) Instead of making class Point3d a friend of class Vector3d, 
-    //make member function Point3d::moveByVector a friend of class Vector3d.
-
-    Point3d2 p2{ 1.0, 2.0, 3.0 };
-    Vector3d2 v2{ 2.0, 2.0, -3.0 };
-
-    p2.print();
-    p2.moveByVector2(v2);
-    p2.print();
-
-    //1c) Reimplement the solution to quiz question 1b using 5 separate files:
-    //Point3d.h, Point3d.cpp, Vector3d.h, Vector3d.cpp, and main.cpp.
-
-    Point3d p{ 1.0, 2.0, 3.0 };
-    Vector3d v{ 2.0, 2.0, -3.0 };
-
-    p.print();
-    p.moveByVector(v);
-    p.print();
-
-    //Thanks to reader Shiva for the suggestionand solution.
 }
 
 int main()
 {
-    lesson813quiz();
+    class_cpp_oop_814();
 
 
     return 0;
