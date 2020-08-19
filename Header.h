@@ -32,6 +32,7 @@ void class_cpp_oop_813();
 void lesson813quiz();
 
 void class_cpp_oop_814();
+void class_cpp_oop_815();
 
 
 #endif // LESSON_8_OOP
