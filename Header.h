@@ -34,6 +34,8 @@ void lesson813quiz();
 void class_cpp_oop_814();
 void class_cpp_oop_815();
 
+void timing_your_code();
+
 
 #endif // LESSON_8_OOP
 
