@@ -16,6 +16,7 @@
 #include "Point3d.h" // for creating Point3d object
 #include <chrono> // for std::chrono functions
 #include <algorithm> // for std::sort
+#include <cmath>
 
 
 class Point2dq
@@ -24,14 +25,33 @@ private:
     double m_x{};
     double m_y{};
 public:
-    Point2dq() : m_x{ 0.0 }, m_y{ 0.0 } {}
-
     Point2dq(double x = 0, double y = 0) : m_x{ 0.0 }, m_y{ 0.0 } { m_x = x; m_y = y; }
 
     void printq()
     {
         std::cout << "Point2dq(" << m_x << ", " << m_y << ")" << std::endl;
     }
+};
+
+class Point2dq1
+{
+private:
+    double m_x{};
+    double m_y{};
+public:
+    Point2dq1(double x = 0, double y = 0) : m_x{ 0.0 }, m_y{ 0.0 } { m_x = x; m_y = y; }
+
+    void printq1()
+    {
+        std::cout << "Point2dq(" << m_x << ", " << m_y << ")" << std::endl;
+    }
+
+    int distanceTo(const Point2dq1 &point) const
+    {
+        return std::sqrt
+        ((m_x - point.m_x) * (m_x - point.m_x) + (m_y - point.m_y) * (m_y - point.m_y));
+    }
+
 };
 
 void chapter_8_comprehensive_quiz()
@@ -121,6 +141,28 @@ void chapter_8_comprehensive_quiz()
     Point2dq secondq{ 3.0, 4.0 };
     firstq.printq();
     secondq.printq();
+
+    /*b) Now add a member function named distanceTo that takes
+    another Point2d as a parameter, 
+    and calculates the distance between them. 
+    Given two points (x1, y1) and (x2, y2),
+    the distance between them can be calculated as
+    std::sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2)).
+    The std::sqrt function lives in header cmath.
+    
+    */
+
+    Point2dq1 firstq1{};
+    Point2dq1 secondq1{ 3.0, 4.0 };
+    firstq1.printq1();
+    secondq1.printq1();
+    std::cout << "Distance between two points: " << firstq1.distanceTo(secondq1) << '\n';
+
+    /*c) Change function distanceTo from a member function to a non-member 
+    friend function that takes two Points as parameters.
+    Also rename it “distanceFrom”.
+    
+    */
 
 }
 
