@@ -51,8 +51,30 @@ public:
         return std::sqrt
         ((m_x - point.m_x) * (m_x - point.m_x) + (m_y - point.m_y) * (m_y - point.m_y));
     }
-
 };
+
+class Point2dq2
+{
+private:
+    double m_x{};
+    double m_y{};
+public:
+    Point2dq2(double x = 0, double y = 0) : m_x{ 0.0 }, m_y{ 0.0 } { m_x = x; m_y = y; }
+
+    void printq2()
+    {
+        std::cout << "Point2dq(" << m_x << ", " << m_y << ")" << std::endl;
+    }
+
+    friend double distanceFrom2(const Point2dq2& point, const Point2dq2& point2);
+};
+
+double distanceFrom2(const Point2dq2& point, const Point2dq2 &point2)
+{
+    return std::sqrt
+    ((point2.m_x - point.m_x) * (point2.m_x - point.m_x) 
+        + (point2.m_y - point.m_y) * (point2.m_y - point.m_y));
+}
 
 void chapter_8_comprehensive_quiz()
 {
@@ -163,6 +185,13 @@ void chapter_8_comprehensive_quiz()
     Also rename it “distanceFrom”.
     
     */
+
+    Point2dq2 firstq2{};
+    Point2dq2 secondq2{ 3.0, 4.0 };
+    firstq2.printq2();
+    secondq2.printq2();
+    std::cout << "Distance between two points: " << distanceFrom2(firstq2, secondq2) << '\n';
+
 
 }
 
