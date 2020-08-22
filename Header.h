@@ -35,6 +35,9 @@ void class_cpp_oop_814();
 void class_cpp_oop_815();
 
 void timing_your_code();
+void chapter_8_comprehensive_quiz();
+
+void chapter_8_comprehensive_quiz2();
 
 
 #endif // LESSON_8_OOP
