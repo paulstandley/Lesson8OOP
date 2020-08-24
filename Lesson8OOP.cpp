@@ -45,6 +45,28 @@ public:
 
 };
 
+enum class MonsterType
+{
+	dragon,
+	goblin, 
+	ogre, 
+	orc, 
+	skeleton, 
+	troll, 
+	vampire, 
+	zombie,
+	max_monster_type
+};
+
+class Monster
+{
+private:
+	MonsterType m_type;
+	std::string m_name;
+	std::string m_roar;
+	int m_hit_points;
+};
+
 void chapter_8_comprehensive_quiz2()
 {
 	HelloWorld hello{};
