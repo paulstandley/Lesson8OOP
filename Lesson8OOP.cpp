@@ -45,26 +45,32 @@ public:
 
 };
 
-enum class MonsterType
-{
-	dragon,
-	goblin, 
-	ogre, 
-	orc, 
-	skeleton, 
-	troll, 
-	vampire, 
-	zombie,
-	max_monster_type
-};
-
 class Monster
 {
+public:
+	enum class Type
+	{
+		dragon,
+		goblin,
+		ogre,
+		orc,
+		skeleton,
+		troll,
+		vampire,
+		zombie,
+		max_monster_type
+	};
+
 private:
-	MonsterType m_type;
+	Type m_type;
 	std::string m_name;
 	std::string m_roar;
 	int m_hit_points;
+
+public:
+	Monster(Type type, std::string name, std::string roar, int hitpoints):
+		m_type{ type }, m_name{ name }, m_roar{ roar }, m_hit_points{ hitpoints } {}
+
 };
 
 void chapter_8_comprehensive_quiz2()
@@ -91,7 +97,7 @@ int main()
 {
     //timing_your_code();
     chapter_8_comprehensive_quiz2();
-
+	Monster skeleton{ Monster::Type::skeleton, "Bones", "*rattle*", 4 };
 
     return 0;
 }
