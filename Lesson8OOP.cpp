@@ -18,6 +18,8 @@
 #include <algorithm> // for std::sort
 #include <cmath>
 #include <string_view>
+#include <ctime> // for time()
+#include <cstdlib> // for rand() and srand()
 
 
 class HelloWorld
@@ -98,11 +100,41 @@ public:
 
 class MonsterGenerator
 {
+private:
+	// Generate a random number between min and max (inclusive)
+	// Assumes srand() has already been called
+	static int getRandomNumber(int min, int max)
+	{
+		static constexpr double fraction{ 1.0 / (static_cast<double>(RAND_MAX) + 1.0) };  // static used for efficiency, so we only calculate this value once
+		// evenly distribute the random number across our range
+		return static_cast<int>(std::rand() * fraction * (max - min + 1) + min);
+	}
+
 public:
+
 	static Monster generateMonster()
 	{
-		return { Monster::Type::skeleton, "Bones", "*rattle*", 4 };
+		int hitpoints{ getRandomNumber(0, 100) }; 
+		auto type{ static_cast<Monster::Type>(getRandomNumber
+			(0, static_cast<int>(Monster::Type::max_monster_type) - 1)) };
+		
+		static constexpr std::array s_names{ 
+			"Blarg", "Moog", "Pksh", "Tyrn", "Mort", "Hans" };
+		static constexpr std::array s_roars{
+		"*ROAR*", "*peep*", "*squeal*", "*whine*", "*hum*", "*burp*" };
+
+		// Without the cast, compilers with a high warning level complain about
+		// an implicit cast from a signed to an unsigned integer.
+
+		auto name{ s_names[static_cast<std::size_t>
+			(getRandomNumber(0, s_names.size() - 1))] }; 
+
+		auto roar{ s_roars[static_cast<std::size_t>
+			(getRandomNumber(0, s_roars.size() - 1))] };
+
+		return { type, name, roar, hitpoints };
 	}
+
 };
 
 void chapter_8_comprehensive_quiz2()
@@ -154,10 +186,53 @@ void chapter_8_comprehensive_quiz2()
 	Monster skeleton{ Monster::Type::skeleton, "Bones", "*rattle*", 4 };
 	skeleton.print();
 
+	std::cout << "......................................................" << '\n';
+
 	Monster monster1{ MonsterGenerator::generateMonster() };
 	monster1.print();
 
+	/*h) Now edit function generateMonster() to generate a random Monster::Type
+	(between 0 and Monster::Type::max_monster_types-1) 
+	and a random hit points (between 1 and 100).
+	This should be fairly straightforward.
+	Once you’ve done that, define two static fixed arrays of size 6 
+	inside the function (named s_names and s_roars)
+	and initialize them with 6 names and 6 sounds of your choice. 
+	Pick a random name from these arrays.
+	
+	*/
 
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+	// set initial seed value to system clock
+	std::rand();
+	// If using Visual Studio, discard first random value
+
+	std::cout << "......................................................" << '\n';
+
+	Monster r_m{ MonsterGenerator::generateMonster() };
+	r_m.print();
+
+	std::cout << "......................................................" << '\n';
+
+	Monster r_m1{ MonsterGenerator::generateMonster() };
+	r_m1.print();
+
+	std::cout << "......................................................" << '\n';
+
+	Monster r_m2{ MonsterGenerator::generateMonster() };
+	r_m2.print();
+
+	std::cout << "......................................................" << '\n';
+
+	Monster r_m13{ MonsterGenerator::generateMonster() };
+	r_m13.print();
+
+	std::cout << "......................................................" << '\n';
+
+	/*Making s_names and s_roars static causes them to be initialized only once.
+	Otherwise, they would get reinitialized every time generateMonster() was called.
+	
+	*/
 }
 
 int main()

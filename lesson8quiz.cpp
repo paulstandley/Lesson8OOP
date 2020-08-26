@@ -12,6 +12,8 @@
 #include "Point3d.h" // for creating Point3d object
 #include <cmath>
 #include <string_view>
+#include <ctime> // for time()
+#include <cstdlib> // for rand() and srand()
 
 
 class Point3dlq
