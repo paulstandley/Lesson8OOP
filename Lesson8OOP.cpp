@@ -20,225 +20,342 @@
 #include <string_view>
 #include <ctime> // for time()
 #include <cstdlib> // for rand() and srand()
+#include <random>
 
 
-class HelloWorld
+class Card
 {
 private:
-	char* m_data{};
-
-public:
-	HelloWorld()
-	{
-		m_data = new char[14];
-		const char* init{ "Hello, World!" };
-		for (int i = 0; i < 14; ++i)
-			m_data[i] = init[i];
-	}
-
-	~HelloWorld()
-	{
-		delete[] m_data;
-	}
-
-	void print() const
-	{
-		std::cout << m_data << '\n';
-	}
-
+    std::vector m_rank;
+    m_suit;
 };
 
-class Monster
+void chapter_8_comprehensive_quiz3()
 {
-public:
-	enum class Type
-	{
-		dragon,
-		goblin,
-		ogre,
-		orc,
-		skeleton,
-		troll,
-		vampire,
-		zombie,
-		max_monster_type
-	};
+/*
+#include <algorithm>
+#include <array>
+#include <cassert>
+#include <ctime>
+#include <iostream>
+#include <random>
 
-private:
-	Type m_type;
-	std::string m_name;
-	std::string m_roar;
-	int m_hit_points;
+enum class CardSuit
+{
+  SUIT_CLUB,
+  SUIT_DIAMOND,
+  SUIT_HEART,
+  SUIT_SPADE,
 
-public:
-	Monster(Type type, const std::string& name, const std::string& roar, int hitpoints):
-		m_type{ type }, m_name{ name }, m_roar{ roar }, m_hit_points{ hitpoints } {}
-
-	// We're returning strings that are known at compile-time. Returning std::string
-	// could add a considerable run-time cost.
-	std::string_view getTypeString() const
-	{
-		switch (m_type)
-		{
-		case Type::dragon: return "dragon";
-		case Type::goblin: return "goblin";
-		case Type::ogre: return "ogre";
-		case Type::orc: return "orc";
-		case Type::skeleton: return "skeleton";
-		case Type::troll: return "troll";
-		case Type::vampire: return "vampire";
-		case Type::zombie: return "zombie";
-		default: return "???";
-		}
-	}
-
-	void print()
-	{// Bones the skeleton has 4 hit points and says *rattle*
-		std::cout << m_name << " the " << getTypeString() << " has " << m_hit_points << " hit points and says " << m_roar << '\n';
-	}
+  MAX_SUITS
 };
 
-class MonsterGenerator
+enum class CardRank
 {
-private:
-	// Generate a random number between min and max (inclusive)
-	// Assumes srand() has already been called
-	static int getRandomNumber(int min, int max)
-	{
-		static constexpr double fraction{ 1.0 / (static_cast<double>(RAND_MAX) + 1.0) };  // static used for efficiency, so we only calculate this value once
-		// evenly distribute the random number across our range
-		return static_cast<int>(std::rand() * fraction * (max - min + 1) + min);
-	}
+  RANK_2,
+  RANK_3,
+  RANK_4,
+  RANK_5,
+  RANK_6,
+  RANK_7,
+  RANK_8,
+  RANK_9,
+  RANK_10,
+  RANK_JACK,
+  RANK_QUEEN,
+  RANK_KING,
+  RANK_ACE,
 
-public:
-
-	static Monster generateMonster()
-	{
-		int hitpoints{ getRandomNumber(0, 100) }; 
-		auto type{ static_cast<Monster::Type>(getRandomNumber
-			(0, static_cast<int>(Monster::Type::max_monster_type) - 1)) };
-		
-		static constexpr std::array s_names{ 
-			"Blarg", "Moog", "Pksh", "Tyrn", "Mort", "Hans" };
-		static constexpr std::array s_roars{
-		"*ROAR*", "*peep*", "*squeal*", "*whine*", "*hum*", "*burp*" };
-
-		// Without the cast, compilers with a high warning level complain about
-		// an implicit cast from a signed to an unsigned integer.
-
-		auto name{ s_names[static_cast<std::size_t>
-			(getRandomNumber(0, s_names.size() - 1))] }; 
-
-		auto roar{ s_roars[static_cast<std::size_t>
-			(getRandomNumber(0, s_roars.size() - 1))] };
-
-		return { type, name, roar, hitpoints };
-	}
-
+  MAX_RANKS
 };
 
-void chapter_8_comprehensive_quiz2()
+struct Card
 {
-	//HelloWorld hello{};
-	//hello.print();
+  CardRank rank{};
+  CardSuit suit{};
+};
 
-	/*Question #3
+struct Player
+{
+  int score{};
+};
 
-	Let’s create a random monster generator. This one should be fun.
+using deck_type = std::array<Card, 52>;
+using index_type = deck_type::size_type;
 
-	a) First, 
-	let’s create an enumeration of monster types named MonsterType. 
-	Include the following monster types:
-	Dragon, Goblin, Ogre, Orc, Skeleton, Troll, Vampire, and Zombie.
-	Add an additional max_monster_types enum so we can count how many enumerators
-	there are.
+// Maximum score before losing.
+constexpr int maximumScore{ 21 };
 
-	b) Now, let’s create our Monster class. 
-	Our Monster will have 4 attributes (member variables): a type (MonsterType),
-	a name (std::string), a roar (std::string), and the number of hit points (int).
-	Create a Monster class that has these 4 member variables.
-	
-	c) enum MonsterType is specific to Monster,
-	so move the enum inside the class as a public declaration.
-	When the enum is inside the class the “Monster” in “MonsterType” is redundant, 
-	it can be removed.
+// Minium score that the dealer has to have.
+constexpr int minimumDealerScore{ 17 };
 
-	d) Create a constructor that allows you to initialize all of the member variables.
+void printCard(const Card& card)
+{
+  switch (card.rank)
+  {
+  case CardRank::RANK_2:
+    std::cout << '2';
+    break;
+  case CardRank::RANK_3:
+    std::cout << '3';
+    break;
+  case CardRank::RANK_4:
+    std::cout << '4';
+    break;
+  case CardRank::RANK_5:
+    std::cout << '5';
+    break;
+  case CardRank::RANK_6:
+    std::cout << '6';
+    break;
+  case CardRank::RANK_7:
+    std::cout << '7';
+    break;
+  case CardRank::RANK_8:
+    std::cout << '8';
+    break;
+  case CardRank::RANK_9:
+    std::cout << '9';
+    break;
+  case CardRank::RANK_10:
+    std::cout << 'T';
+    break;
+  case CardRank::RANK_JACK:
+    std::cout << 'J';
+    break;
+  case CardRank::RANK_QUEEN:
+    std::cout << 'Q';
+    break;
+  case CardRank::RANK_KING:
+    std::cout << 'K';
+    break;
+  case CardRank::RANK_ACE:
+    std::cout << 'A';
+    break;
+  default:
+    std::cout << '?';
+    break;
+  }
 
-	e) Now we want to be able to print our monster so we can validate it’s correct.
-	To do that, we’re going to need to write a function that converts a 
-	Monster::Type into a string. 
-	Write that function (called getTypeString()), 
-	as well as a print() member function.
+  switch (card.suit)
+  {
+  case CardSuit::SUIT_CLUB:
+    std::cout << 'C';
+    break;
+  case CardSuit::SUIT_DIAMOND:
+    std::cout << 'D';
+    break;
+  case CardSuit::SUIT_HEART:
+    std::cout << 'H';
+    break;
+  case CardSuit::SUIT_SPADE:
+    std::cout << 'S';
+    break;
+  default:
+    std::cout << '?';
+    break;
+  }
+}
 
-	f) Now we can create a random monster generator.
-	Let’s consider how our MonsterGenerator class will work. 
-	Ideally, we’ll ask it to give us a Monster, and it will create a random one for us.
-	We don’t need more than one MonsterGenerator.
-	This is a good candidate for a static class (one in which all functions are static).
-	Create a static MonsterGenerator class. 
-	Create a static function named generateMonster(). 
-	This should return a Monster.
-	For now, make it return anonymous
-	Monster(Monster::Type::skeleton, “Bones”, “*rattle*”, 4);
+int getCardValue(const Card& card)
+{
+  if (card.rank <= CardRank::RANK_10)
+  {
+    return (static_cast<int>(card.rank) + 2);
+  }
 
-	*/
-	Monster skeleton{ Monster::Type::skeleton, "Bones", "*rattle*", 4 };
-	skeleton.print();
+  switch (card.rank)
+  {
+  case CardRank::RANK_JACK:
+  case CardRank::RANK_QUEEN:
+  case CardRank::RANK_KING:
+    return 10;
+  case CardRank::RANK_ACE:
+    return 11;
+  default:
+    assert(false && "should never happen");
+    return 0;
+  }
+}
 
-	std::cout << "......................................................" << '\n';
+void printDeck(const deck_type& deck)
+{
+  for (const auto& card : deck)
+  {
+    printCard(card);
+    std::cout << ' ';
+  }
 
-	Monster monster1{ MonsterGenerator::generateMonster() };
-	monster1.print();
+  std::cout << '\n';
+}
 
-	/*h) Now edit function generateMonster() to generate a random Monster::Type
-	(between 0 and Monster::Type::max_monster_types-1) 
-	and a random hit points (between 1 and 100).
-	This should be fairly straightforward.
-	Once you’ve done that, define two static fixed arrays of size 6 
-	inside the function (named s_names and s_roars)
-	and initialize them with 6 names and 6 sounds of your choice. 
-	Pick a random name from these arrays.
-	
-	*/
+deck_type createDeck()
+{
+  deck_type deck{};
 
-	std::srand(static_cast<unsigned int>(std::time(nullptr)));
-	// set initial seed value to system clock
-	std::rand();
-	// If using Visual Studio, discard first random value
+  index_type card{ 0 };
 
-	std::cout << "......................................................" << '\n';
+  auto suits{ static_cast<index_type>(CardSuit::MAX_SUITS) };
+  auto ranks{ static_cast<index_type>(CardRank::MAX_RANKS) };
 
-	Monster r_m{ MonsterGenerator::generateMonster() };
-	r_m.print();
+  for (index_type suit{ 0 }; suit < suits; ++suit)
+  {
+    for (index_type rank{ 0 }; rank < ranks; ++rank)
+    {
+      deck[card].suit = static_cast<CardSuit>(suit);
+      deck[card].rank = static_cast<CardRank>(rank);
+      ++card;
+    }
+  }
 
-	std::cout << "......................................................" << '\n';
+  return deck;
+}
 
-	Monster r_m1{ MonsterGenerator::generateMonster() };
-	r_m1.print();
+void shuffleDeck(deck_type& deck)
+{
+  static std::mt19937 mt{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
 
-	std::cout << "......................................................" << '\n';
+  std::shuffle(deck.begin(), deck.end(), mt);
+}
 
-	Monster r_m2{ MonsterGenerator::generateMonster() };
-	r_m2.print();
+bool playerWantsHit()
+{
+  while (true)
+  {
+    std::cout << "(h) to hit, or (s) to stand: ";
 
-	std::cout << "......................................................" << '\n';
+    char ch{};
+    std::cin >> ch;
 
-	Monster r_m13{ MonsterGenerator::generateMonster() };
-	r_m13.print();
+    switch (ch)
+    {
+    case 'h':
+      return true;
+    case 's':
+      return false;
+    }
+  }
+}
 
-	std::cout << "......................................................" << '\n';
+// Returns true if the player went bust. False otherwise.
+bool playerTurn(const deck_type& deck, index_type& nextCardIndex, Player& player)
+{
+  while (true)
+  {
+    std::cout << "You have: " << player.score << '\n';
 
-	/*Making s_names and s_roars static causes them to be initialized only once.
-	Otherwise, they would get reinitialized every time generateMonster() was called.
-	
-	*/
+    if (player.score > maximumScore)
+    {
+      return true;
+    }
+    else
+    {
+      if (playerWantsHit())
+      {
+        player.score += getCardValue(deck[nextCardIndex++]);
+      }
+      else
+      {
+        // The player didn't go bust.
+        return false;
+      }
+    }
+  }
+}
+
+// Returns true if the dealer went bust. False otherwise.
+bool dealerTurn(const deck_type& deck, index_type& nextCardIndex, Player& dealer)
+{
+  while (dealer.score < minimumDealerScore)
+  {
+    dealer.score += getCardValue(deck[nextCardIndex++]);
+  }
+
+  return (dealer.score > maximumScore);
+}
+
+bool playBlackjack(const deck_type& deck)
+{
+  index_type nextCardIndex{ 0 };
+
+  Player dealer{ getCardValue(deck[nextCardIndex++]) };
+
+  std::cout << "The dealer is showing: " << dealer.score << '\n';
+
+  Player player{ getCardValue(deck[nextCardIndex]) + getCardValue(deck[nextCardIndex + 1]) };
+  nextCardIndex += 2;
+
+  if (playerTurn(deck, nextCardIndex, player))
+  {
+    return false;
+  }
+
+  if (dealerTurn(deck, nextCardIndex, dealer))
+  {
+    return true;
+  }
+
+  return (player.score > dealer.score);
+}
+
+int main()
+{
+  auto deck{ createDeck() };
+
+  shuffleDeck(deck);
+
+  if (playBlackjack(deck))
+  {
+    std::cout << "You win!\n";
+  }
+  else
+  {
+    std::cout << "You lose!\n";
+  }
+
+  return 0;
+}
+
+This Blackjack program is really composed of four parts: 
+the logic that deals with cards, 
+the logic that deals with the deck of cards, 
+the logic that deals with dealing cards from the deck, 
+and the game logic. 
+Our strategy will be to work on each of these pieces individually, 
+testing each part with a small test program as we go. 
+That way, instead of trying to convert the entire program in one go,
+we can do it in 4 testable parts.
+
+a) Let’s start by making Card a class instead of a struct. 
+The good news is that the Card class is pretty similar to the 
+Monster class from the previous quiz question. 
+
+First, create private members to hold the rank and suit
+(name them m_rank and m_suit accordingly). 
+
+Second, create a public constructor for the Card class so we can initialize Cards.
+Third, make the class default constructible,
+either by adding a default constructor or by adding default arguments 
+to the current constructor. 
+
+Finally, move the printCard() and getCardValue() 
+functions inside the class as public members (remember to make them const!)
+
+A reminder
+
+When using a std::array (or std::vector) where the elements are a class type, 
+your element’s class must have a default constructor so the elements
+can be initialized to a reasonable default state. 
+If you do not provide one, you’ll get a cryptic error about attempting to reference 
+a deleted function.
+
+*/
 }
 
 int main()
 {
     //timing_your_code();
-    chapter_8_comprehensive_quiz2();
+	chapter_8_comprehensive_quiz3();
 	
 
     return 0;
