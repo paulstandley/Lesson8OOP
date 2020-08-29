@@ -156,6 +156,53 @@ public:
     }
 };
 
+class Deck
+{
+public:
+    using array_type = std::array<Card, 52>;
+    using index_type = array_type::size_type;
+
+private:
+    array_type m_deck{};
+
+public:
+    void print() const
+    {
+        for (const auto& card : m_deck)
+        {
+            card.print();
+            std::cout << ' ';
+        }
+
+        std::cout << '\n';
+    }
+
+    void shuffle()
+    {
+        static std::mt19937 mt{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
+
+        std::shuffle(m_deck.begin(), m_deck.end(), mt);
+    }
+
+    Deck()
+    {
+        index_type card{ 0 };
+
+        auto suits{ static_cast<index_type>(CardSuit::MAX_SUITS) };
+        auto ranks{ static_cast<index_type>(CardRank::MAX_RANKS) };
+
+        for (index_type suit{ 0 }; suit < suits; ++suit)
+        {
+            for (index_type rank{ 0 }; rank < ranks; ++rank)
+            {
+                m_deck[card] = { static_cast<CardRank>(rank), static_cast<CardSuit>(suit) };
+                ++card;
+            }
+        }
+    }
+};
+
+
 void chapter_8_comprehensive_quiz3()
 {
 /*
@@ -480,6 +527,24 @@ a deleted function.
     const Card cardQueenHearts{ CardRank::RANK_QUEEN, CardSuit::SUIT_HEART };
     cardQueenHearts.print();
     std::cout << " has the value " << cardQueenHearts.value() << '\n';
+
+    /*b) Okay, now let’s work on a Deck class. 
+    The deck needs to hold 52 cards, so use a private std::array member 
+    to create a fixed array of 52 cards named m_deck. 
+    Second, create a constructor that takes no parameters and initializes m_deck
+    with one of each card (modify the code from the original createDeck() function).
+    Third, move printDeck into the Deck class as a public member. 
+    Fourth, move shuffleDeck into the class as a public member.
+
+    The trickiest part of this step is initializing the deck using the modified
+    code from the original createDeck() function. 
+    
+    */
+
+    Deck deck;
+    deck.print();
+    deck.shuffle();
+    deck.print();
 
 }
 
